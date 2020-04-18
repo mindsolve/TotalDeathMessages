@@ -119,7 +119,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     " (that poor " + ChatColor.BLUE + originalEntityName + ChatColor.DARK_GRAY + ")";
         } else {
             // Attach correct article
-            String article = "A" + (killedEntityName.matches("^[AEIOU]") ? "n " : " ");
+            String article = "A" + (killedEntityName.matches("^[AEIOU].*") ? "n " : " ");
             deathMessage = ChatColor.DARK_GRAY + article + ChatColor.BLUE + killedEntityName + ChatColor.DARK_GRAY;
         }
 
