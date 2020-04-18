@@ -1,0 +1,16 @@
+# Timeout (in seconds) after which a killing spree stop
+killing-spree-timeout: 15
+
+# List of worlds to ignore (world names)
+#ignore-worlds:
+#  - world
+
+# List of world types to ignore (possible values: NORMAL, NETHER, THE_END)
+ignore-world-types:
+#  - THE_END
+  -
+
+# List of entity types to ignore
+ignore-entities:
+#  - ENDERMAN
+  -
