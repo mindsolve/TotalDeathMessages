@@ -198,10 +198,15 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             } else if (damager instanceof Player) {
                 // Keine Todeswaffe kann in der linken (offhand) getragen werden und töten, außer Bogen.
                 // Bogen wird allerdings durch Projectile -> Arrow abgedeckt
-
-                deathMessage.append(" by hitting it repeatedly with his ").color(DARK_GRAY);
-
                 EntityEquipment killerEquipment = killerPlayer.getEquipment();
+
+                if (killerEquipment.getItemInMainHand().getType().name().contains("SWORD")) {
+                    deathMessage.append(" by slashing it with his ").color(DARK_GRAY);
+                } else {
+                    deathMessage.append(" by hitting it repeatedly with his ").color(DARK_GRAY);
+                }
+
+
                 if (killerEquipment != null) {
                     ItemStack killerWeapon = killerEquipment.getItemInMainHand();
                     TextComponent killerWeaponComponent = TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon);
