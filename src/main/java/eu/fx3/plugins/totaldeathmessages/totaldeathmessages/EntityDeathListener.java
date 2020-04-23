@@ -227,6 +227,10 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
             // If cause == FIRE_TICK && getKiller == Player, this is cased by Fire* on Playerweapon
             deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
+
+        } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FALL) {
+            deathMessage.append(" by letting him ").color(DARK_GRAY).append("fall to death.").color(BLUE);
+
         } else {
             deathMessage.append(" (How the heck did you do this? Event (other): " + deadEntity.getLastDamageCause().getCause() + ")").color(DARK_RED);
         }
