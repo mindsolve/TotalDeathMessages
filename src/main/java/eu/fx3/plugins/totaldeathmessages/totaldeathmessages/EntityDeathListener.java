@@ -46,6 +46,11 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             return;
         }
 
+        // Ignore player deaths
+        if (deadEntity instanceof Player) {
+            return;
+        }
+
         if (plugin.getConfig().contains("ignore-world-types")) {
             for (String worldType : plugin.getConfig().getStringList("ignore-world-types")) {
                 try {
