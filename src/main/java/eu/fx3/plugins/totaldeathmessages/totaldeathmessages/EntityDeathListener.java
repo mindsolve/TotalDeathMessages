@@ -277,7 +277,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         ComponentBuilder thisPart = new ComponentBuilder("").color(DARK_GRAY);
 
         Tameable deadTameableEntity = (Tameable) deadEntity;
-        if (deadTameableEntity.isTamed()) {
+        if (deadTameableEntity.isTamed() && deadTameableEntity.getOwner() != null) {
             assert killerPlayer != null;
             if (!killerPlayer.getName().equals(deadTameableEntity.getOwner().getName())) {
                 thisPart.append(", ").append(deadTameableEntity.getOwner().getName()).color(DARK_PURPLE).append("s pet,").color(DARK_GRAY);
