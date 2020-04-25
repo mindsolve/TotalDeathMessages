@@ -163,7 +163,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     Arrow arrowDamager = (Arrow) damager;
 
                     if (arrowDamager.getBasePotionData().getType() != PotionType.UNCRAFTABLE && arrowDamager.getCustomEffects().isEmpty()) {
-                        deathMessage.append("Tipped Arrow with effect " + WordUtils.capitalizeFully(arrowDamager.getBasePotionData().getType().toString().replaceAll("_"," ")));
+                        deathMessage.append("Tipped Arrow with effect " + WordUtils.capitalizeFully(arrowDamager.getBasePotionData().getType().toString().replaceAll("_", " ")));
                     } else {
                         deathMessage.append("Arrow");
                     }
@@ -204,21 +204,22 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 // Keine Todeswaffe kann in der linken (offhand) getragen werden und töten, außer Bogen.
                 // Bogen wird allerdings durch Projectile -> Arrow abgedeckt
                 EntityEquipment killerEquipment = killerPlayer.getEquipment();
+                ItemStack killerWeapon = null;
 
-                if (killerEquipment.getItemInMainHand().getType().name().contains("SWORD")) {
-                    deathMessage.append(" by slashing it with his ").color(DARK_GRAY);
-                } else {
-                    deathMessage.append(" by hitting it repeatedly with his ").color(DARK_GRAY);
-                }
-
-
+                // Evtl. könnte dies auftreten, wenn der Spieler keine Items im Inventar hat
+                // itemToTextComponent kann mit "null" umgehen (bare hands)
                 if (killerEquipment != null) {
-                    ItemStack killerWeapon = killerEquipment.getItemInMainHand();
-                    TextComponent killerWeaponComponent = TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon);
-                    deathMessage.append(killerWeaponComponent);
-                } else {
-                    deathMessage.append("[Error: killerEquipment is null!]");
+                    if (killerEquipment.getItemInMainHand().getType().name().contains("SWORD")) {
+                        deathMessage.append(" by slashing it with his ").color(DARK_GRAY);
+                    } else {
+                        deathMessage.append(" by hitting it repeatedly with his ").color(DARK_GRAY);
+                    }
+
+                    killerWeapon = killerEquipment.getItemInMainHand();
                 }
+
+                TextComponent killerWeaponComponent = TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon);
+                deathMessage.append(killerWeaponComponent);
 
             }
 

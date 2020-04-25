@@ -46,11 +46,8 @@ public class NMSItem {
         ChatColor messageColor = ChatColor.BLUE;
         TextComponent itemComponent = new TextComponent();
 
-        if (itemStack == null) {
-            return itemComponent;
-        }
 
-        if (!itemStack.getType().equals(Material.AIR)) {
+        if (itemStack != null && !itemStack.getType().equals(Material.AIR)) {
             String jsonItem = this.itemToJson(itemStack);
             BaseComponent[] hoverEventComponents = new BaseComponent[]{new TextComponent(jsonItem)};
             event = new HoverEvent(Action.SHOW_ITEM, hoverEventComponents);
