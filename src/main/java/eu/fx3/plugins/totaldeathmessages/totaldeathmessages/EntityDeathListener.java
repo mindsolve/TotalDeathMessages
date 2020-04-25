@@ -1,6 +1,5 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -162,11 +161,36 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 if (damager instanceof Arrow) {
                     Arrow arrowDamager = (Arrow) damager;
 
+                    deathMessage.append("by shooting ");
+
                     if (arrowDamager.getBasePotionData().getType() != PotionType.UNCRAFTABLE && arrowDamager.getCustomEffects().isEmpty()) {
-                        deathMessage.append("Tipped Arrow with effect " + WordUtils.capitalizeFully(arrowDamager.getBasePotionData().getType().toString().replaceAll("_", " ")));
-                    } else {
-                        deathMessage.append("Arrow");
+                        ItemStack killerArrow = new ItemStack(Material.TIPPED_ARROW);
+                        PotionMeta meta = (PotionMeta) killerArrow.getItemMeta();
+                        meta.setBasePotionData(arrowDamager.getBasePotionData());
+                        killerArrow.setItemMeta(meta);
+                        deathMessage.append("a ");
+                        deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerArrow));
                     }
+
+                    if (killerPlayer.getEquipment() != null) {
+                        ItemStack killerWeapon = null;
+
+                        //Könnte sowohl "BOW" also auch "CROSSBOW" sein
+                        boolean bowInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType().name().contains("BOW");
+                        boolean bowInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType().name().contains("BOW");
+
+                        if (bowInOffhand && !bowInMainhand) {
+                            killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
+                        } else if (bowInOffhand || bowInMainhand) {
+                            killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
+                        }
+
+                        if (killerWeapon != null) {
+                            deathMessage.append(" with his ").color(DARK_GRAY);
+                            deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
+                        }
+                    }
+
 
                 } else if (damager instanceof ThrowableProjectile) {
                     ThrowableProjectile throwableDamager = (ThrowableProjectile) damager;
@@ -191,6 +215,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         // This should not be possible, except (maybe) for cheating a whithering potion
                         deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(item));
                     }
+
                 } else {
                     Projectile projectileDamager = (Projectile) damager;
 
@@ -200,6 +225,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         deathMessage.append(" \"" + projectileDamager.getCustomName() + "\"");
                     }
                 }
+
+
             } else if (damager instanceof Player) {
                 // Keine Todeswaffe kann in der linken (offhand) getragen werden und töten, außer Bogen.
                 // Bogen wird allerdings durch Projectile -> Arrow abgedeckt
