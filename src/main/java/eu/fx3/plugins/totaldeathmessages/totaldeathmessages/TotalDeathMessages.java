@@ -1,12 +1,7 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import eu.fx3.plugins.totaldeathmessages.utils.NMSItem;
-import net.md_5.bungee.api.chat.*;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -41,10 +36,12 @@ public final class TotalDeathMessages extends JavaPlugin {
         configWatcher = new FileWatcher(configFile, this::updateConfig);
         configWatcher.start();
 
+        // Register command
+        this.getCommand("mobdeathmsgs").setExecutor(new MobdeathCommand());
+        this.getCommand("mobdeathmsgs").setTabCompleter(new MobdeathCommandTabcomplete());
+
         // Log success
         getLogger().info(ChatColor.GREEN + "Plugin erfolgreich initialisiert!");
-
-
 
     }
 

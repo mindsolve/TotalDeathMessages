@@ -27,7 +27,7 @@ import java.util.List;
 import static net.md_5.bungee.api.ChatColor.*;
 
 public class EntityDeathListener implements org.bukkit.event.Listener {
-    JavaPlugin plugin = JavaPlugin.getPlugin(TotalDeathMessages.class);
+    JavaPlugin plugin = TotalDeathMessages.getInstance();
 
     List<PlayerKillStats> playerKillList = new ArrayList<PlayerKillStats>();
 
@@ -155,7 +155,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             Entity damager = ((EntityDamageByEntityEvent) deadEntity.getLastDamageCause()).getDamager();
 
             if (damager instanceof Projectile) {
-//                deathMessage.append(" with Projectile ").color(DARK_GRAY);
                 deathMessage.append(" ").color(DARK_GRAY);
 
                 if (damager instanceof Arrow) {
@@ -283,7 +282,10 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         TotalDeathMessages.getInstance().getLogger().info(BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            player.spigot().sendMessage(deathMessage.create());
+            // Only send messages to players that want them
+            if (MobdeathCommand.playerWantsMessages(player.getUniqueId())) {
+                player.spigot().sendMessage(deathMessage.create());
+            }
         }
 
     }
@@ -299,6 +301,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         }
         return false;
     }
+
 
     private ComponentBuilder getPetTextComponent(LivingEntity deadEntity) {
         Player killerPlayer = deadEntity.getKiller();

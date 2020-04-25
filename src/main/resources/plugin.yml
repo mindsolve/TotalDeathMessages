@@ -1,6 +1,13 @@
 name: Total_Death_Messages
 version: ${project.version}
 main: eu.fx3.plugins.totaldeathmessages.totaldeathmessages.TotalDeathMessages
-api-version: 1.13
+api-version: "1.13"
 authors: [MindSolvinator]
 description: Shows death messages for configurable mobs (reverse of normal behaviour)
+commands:
+  mobdeathmsgs:
+    description: Enables or disables mob death messages (from this plugin)
+    usage: "Usage: /<command> [ status | enable | disable ]"
+    aliases:
+      - mobdeath
+      - totaldeathmessages
