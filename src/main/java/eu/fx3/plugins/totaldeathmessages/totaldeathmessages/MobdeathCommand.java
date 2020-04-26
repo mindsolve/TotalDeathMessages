@@ -50,7 +50,7 @@ public class MobdeathCommand implements CommandExecutor {
                 }
 
                 commandResponse.append("\n").reset();
-                commandResponse.append("Show all killing spree messages: ");
+                commandResponse.append("Don't hide killing spree messages: ");
 
                 if (MobdeathConfig.getPlayerConfig(player.getUniqueId(), "allKillSpreeMessages")) {
                     commandResponse.append("Enabled").bold(true).color(GREEN);

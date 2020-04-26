@@ -260,7 +260,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             // Might be an Arrow of Harming (I / II). Either we assume that here, or we ignore it (because we cant check: time of check vs time of arrow firing)
 
             deathMessage.append(" using ").color(DARK_GRAY)
-                    .append("magic").color(AQUA)
+                    .append("Magic").color(AQUA)
                     .append(" (").color(DARK_GRAY)
                     .append("maybe Arrow of Harming?").italic(true)
                     .append(")").reset().color(DARK_GRAY);
