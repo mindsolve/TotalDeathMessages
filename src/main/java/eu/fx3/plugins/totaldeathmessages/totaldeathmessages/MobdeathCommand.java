@@ -6,9 +6,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.UUID;
-
 import static net.md_5.bungee.api.ChatColor.*;
+
+
+/*
+TODO:
+    switch dass bei killing spree nur ersten beiden nachrichten angezeigt werden,
+    dann nach dem killing spree eine zusammenfassende meldung (whoa, player has killed 200000 mobs in his killing spree!)
+ */
+
 
 public class MobdeathCommand implements CommandExecutor {
     static TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
@@ -23,7 +29,7 @@ public class MobdeathCommand implements CommandExecutor {
 
         // Initialize preference if not yet set
         if (!pluginInstance.getConfig().isSet("playerconfig." + player.getUniqueId())) {
-            setPlayerConfig(player.getUniqueId(), true);
+            MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allMessages",true);
         }
 
         if (args.length < 1) {
@@ -33,7 +39,7 @@ public class MobdeathCommand implements CommandExecutor {
         ComponentBuilder commandResponse = new ComponentBuilder();
         switch (args[0]) {
             case "status":
-                if (playerWantsMessages(player.getUniqueId())) {
+                if (MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
                     commandResponse.append("You are currently receiving mob death messages.").color(GREEN);
                 } else {
                     commandResponse.append("You are currently not receiving mob death messages.\n").color(YELLOW);
@@ -42,12 +48,12 @@ public class MobdeathCommand implements CommandExecutor {
                 break;
 
             case "enable":
-                setPlayerConfig(player.getUniqueId(), true);
+                MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allMessages",true);
                 commandResponse.append("Enabled mob death messages!").color(GREEN);
                 break;
 
             case "disable":
-                setPlayerConfig(player.getUniqueId(), false);
+                MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allMessages", false);
                 commandResponse.append("Disabled mob death messages.").color(YELLOW);
                 break;
 
@@ -61,15 +67,4 @@ public class MobdeathCommand implements CommandExecutor {
         return true;
     }
 
-    static boolean playerWantsMessages(UUID playerUUID) {
-        if (!pluginInstance.getConfig().isSet("playerconfig." + playerUUID)) {
-            setPlayerConfig(playerUUID, true);
-        }
-        return pluginInstance.getConfig().getBoolean("playerconfig." + playerUUID);
-    }
-
-    static void setPlayerConfig(UUID playerUUID, boolean value) {
-        pluginInstance.getConfig().set("playerconfig." + playerUUID, value);
-        pluginInstance.saveConfig();
-    }
 }

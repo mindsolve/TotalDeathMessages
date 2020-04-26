@@ -20,7 +20,7 @@ public class MobdeathCommandTabcomplete implements TabCompleter {
 
         completions.add("status");
 
-        if (MobdeathCommand.playerWantsMessages(player.getUniqueId())) {
+        if (MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
             completions.add("disable");
         } else {
             completions.add("enable");

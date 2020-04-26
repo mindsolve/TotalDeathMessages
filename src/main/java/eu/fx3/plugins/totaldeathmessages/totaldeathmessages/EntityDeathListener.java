@@ -171,6 +171,10 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerArrow));
                     }
 
+                    // TODO:
+                    //  Wenn killer zwischen Bogen und anderem Slot wechselt (Schwert), dann wird nichts angezeigt ("by shooting ")
+                    //  Außerdem, wenn killer keinen Bogen hat (abgeprallter Pfeil), dann ebenfalls nicht
+
                     if (killerPlayer.getEquipment() != null) {
                         ItemStack killerWeapon = null;
 
@@ -283,7 +287,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         TotalDeathMessages.getInstance().getLogger().info(BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
             // Only send messages to players that want them
-            if (MobdeathCommand.playerWantsMessages(player.getUniqueId())) {
+            if (MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
                 player.spigot().sendMessage(deathMessage.create());
             }
         }

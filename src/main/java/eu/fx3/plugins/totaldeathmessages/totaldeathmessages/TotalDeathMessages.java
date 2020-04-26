@@ -2,6 +2,7 @@ package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import eu.fx3.plugins.totaldeathmessages.utils.NMSItem;
 import org.bukkit.ChatColor;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -29,6 +30,7 @@ public final class TotalDeathMessages extends JavaPlugin {
             saveDefaultConfig();
             getLogger().info("Standard-Konfiguration erstellt!");
         } else {
+            MobdeathConfig.upgradeConfigVersion(getConfig().getInt("config-version", 1));
             reloadConfig();
         }
 
@@ -36,9 +38,14 @@ public final class TotalDeathMessages extends JavaPlugin {
         configWatcher = new FileWatcher(configFile, this::updateConfig);
         configWatcher.start();
 
+
+        PluginCommand mobdeathmsgs = this.getCommand("mobdeathmsgs");
+        assert mobdeathmsgs != null;
+
         // Register command
-        this.getCommand("mobdeathmsgs").setExecutor(new MobdeathCommand());
-        this.getCommand("mobdeathmsgs").setTabCompleter(new MobdeathCommandTabcomplete());
+        mobdeathmsgs.setExecutor(new MobdeathCommand());
+        // Register Tab-Complete for command
+        mobdeathmsgs.setTabCompleter(new MobdeathCommandTabcomplete());
 
         // Log success
         getLogger().info(ChatColor.GREEN + "Plugin erfolgreich initialisiert!");

@@ -12,3 +12,12 @@ ignore-world-types: []
 # List of entity types to ignore
 ignore-entities: []
 #  - ENDERMAN
+
+# Player-specific configuration
+playerconfig:
+  -
+
+
+# Config file version
+# Please do not modify manually!
+config-version: 2
