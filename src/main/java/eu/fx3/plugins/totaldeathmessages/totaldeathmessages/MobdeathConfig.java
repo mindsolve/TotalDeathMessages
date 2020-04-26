@@ -1,7 +1,6 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.Set;
 import java.util.UUID;
@@ -43,6 +42,11 @@ public class MobdeathConfig {
         return pluginInstance.getConfig().getConfigurationSection(sectionPath);
     }
 
+
+    /**
+     * Updates the plugin config file from a previous version, if needed
+     * @param oldVersion The old plugin config version number
+     */
     static void upgradeConfigVersion(int oldVersion) {
         switch (oldVersion) {
             case CONFIG_VERSION:
