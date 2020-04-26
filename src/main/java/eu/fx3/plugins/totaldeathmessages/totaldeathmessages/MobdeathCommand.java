@@ -39,23 +39,53 @@ public class MobdeathCommand implements CommandExecutor {
         ComponentBuilder commandResponse = new ComponentBuilder();
         switch (args[0]) {
             case "status":
+                commandResponse.append("Mob Death Message Status:\n").underlined(true);
+                commandResponse.append("All messages: ").underlined(false);
+
                 if (MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
-                    commandResponse.append("You are currently receiving mob death messages.").color(GREEN);
+                    commandResponse.append("Enabled").bold(true).color(GREEN);
                 } else {
-                    commandResponse.append("You are currently not receiving mob death messages.\n").color(YELLOW);
-                    commandResponse.append("To enable, run ").color(WHITE).append("/" + label + " enable").color(AQUA).bold(true);
+                    commandResponse.append("Disabled").bold(true).color(YELLOW);
+                    commandResponse.append("\nTo enable, run ").reset().italic(true).color(WHITE).append("/" + label + " all enable").color(AQUA).bold(true);
+                }
+
+                commandResponse.append("\n").reset();
+                commandResponse.append("Show all killing spree messages: ");
+
+                if (MobdeathConfig.getPlayerConfig(player.getUniqueId(), "allKillSpreeMessages")) {
+                    commandResponse.append("Enabled").bold(true).color(GREEN);
+                } else {
+                    commandResponse.append("Disabled").bold(true).color(YELLOW);
+                    commandResponse.append("\nTo enable, run ").reset().italic(true).color(WHITE).append("/" + label + " killspree enable").color(AQUA).bold(true);
                 }
                 break;
 
-            case "enable":
-                MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allMessages",true);
-                commandResponse.append("Enabled mob death messages!").color(GREEN);
-                break;
+            case "all":
+                if (args.length >= 2 && args[1].equals("enable")) {
+                    MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allMessages",true);
+                    commandResponse.append("Enabled mob death messages!").color(GREEN);
+                    break;
+                } else if (args.length >= 2 && args[1].equals("disable")) {
+                    MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allMessages", false);
+                    commandResponse.append("Disabled mob death messages.").color(YELLOW);
+                    break;
+                } else {
+                    return false;
+                }
 
-            case "disable":
-                MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allMessages", false);
-                commandResponse.append("Disabled mob death messages.").color(YELLOW);
-                break;
+            case "killingspree":
+            case "killspree":
+                if (args.length >= 2 && args[1].equals("enable")) {
+                    MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allKillSpreeMessages",true);
+                    commandResponse.append("Showing all Killing Spree messages!").color(GREEN);
+                    break;
+                } else if (args.length >= 2 && args[1].equals("disable")) {
+                    MobdeathConfig.setPlayerConfig(player.getUniqueId(), "allKillSpreeMessages", false);
+                    commandResponse.append("Only showing summarized Killing Spree messages.").color(YELLOW);
+                    break;
+                } else {
+                    return false;
+                }
 
             default:
                 commandResponse.append("Error:").color(RED).bold(true).append("Unknown subcommand \"" + args[0] + "\"!").bold(false);
