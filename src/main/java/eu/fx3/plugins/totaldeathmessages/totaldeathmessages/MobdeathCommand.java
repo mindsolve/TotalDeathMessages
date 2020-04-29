@@ -15,6 +15,10 @@ TODO:
     dann nach dem killing spree eine zusammenfassende meldung (whoa, player has killed 200000 mobs in his killing spree!)
  */
 
+// TODO: Bessere Erklärung, was Einstellungen machen
+// TODO: Bessere visuelle Darstellung
+// TODO: JavaDoc this file
+
 
 public class MobdeathCommand implements CommandExecutor {
     static TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
