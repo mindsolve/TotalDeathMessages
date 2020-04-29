@@ -80,11 +80,12 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         }
 
         // 2. try: Set statistics, if in List
+        int killSpreeTimeout = plugin.getConfig().getInt("killing-spree-timeout");
         boolean isInList = false;
-        for (PlayerKillStats item : playerKillList) {
+        for (PlayerKillStats item : ((TotalDeathMessages) plugin).playerKillList) {
             if (item.playerName.equals(killerPlayer.getName())) {
 
-                if (killTimestamp - item.lastKillTime <= plugin.getConfig().getInt("killing-spree-timeout")) {
+                if (killTimestamp - item.lastKillTime <= killSpreeTimeout) {
                     // Killing spree
                     item.spreeKillCount++;
                 } else {
@@ -107,7 +108,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             killStat.totalKillCount = 1;
             killStat.playerName = killerPlayer.getName();
 
-            playerKillList.add(killStat);
+            ((TotalDeathMessages) plugin).playerKillList.add(killStat);
             currentKillStat = killStat;
         }
 
@@ -285,9 +286,18 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         TotalDeathMessages.getInstance().getLogger().info(BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
             // Only send messages to players that want them
-            if (MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
-                player.spigot().sendMessage(deathMessage.create());
+            if (!MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
+                continue;
             }
+
+            if (!MobdeathConfig.getPlayerConfig(player.getUniqueId(), "allKillSpreeMessages") &&
+                    currentKillStat.spreeKillCount > 2) {
+
+                continue;
+            }
+
+            player.spigot().sendMessage(deathMessage.create());
+
         }
 
     }
