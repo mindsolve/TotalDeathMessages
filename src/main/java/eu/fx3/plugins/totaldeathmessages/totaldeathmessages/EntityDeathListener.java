@@ -21,16 +21,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionType;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 import static net.md_5.bungee.api.ChatColor.*;
 
 public class EntityDeathListener implements org.bukkit.event.Listener {
     JavaPlugin plugin = TotalDeathMessages.getInstance();
-
-    List<PlayerKillStats> playerKillList = new ArrayList<PlayerKillStats>();
-
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
@@ -192,6 +187,9 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                             deathMessage.append(" with his ").color(DARK_GRAY);
                             deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
                         }
+
+                        // Removed last part from ComponentBuilder
+                        //  deathMessage.removeComponent(deathMessage.getCursor());
                     }
 
 
@@ -323,4 +321,5 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         return thisPart;
     }
+
 }
