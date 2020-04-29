@@ -4,6 +4,7 @@ import eu.fx3.plugins.totaldeathmessages.utils.NMSItem;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ public final class TotalDeathMessages extends JavaPlugin {
         mobdeathmsgs.setExecutor(new MobdeathCommand());
         // Register Tab-Complete for command
         mobdeathmsgs.setTabCompleter(new MobdeathCommandTabcomplete());
+
+        // Start KillingSpree Timer
+        BukkitTask task = new KillingspreeMessageTask(this).runTaskTimer(this, 25*5, 25*5);
 
         // Log success
         getLogger().info(ChatColor.GREEN + "Plugin erfolgreich initialisiert!");
