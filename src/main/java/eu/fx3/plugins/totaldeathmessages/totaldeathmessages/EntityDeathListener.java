@@ -223,7 +223,30 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         // This should not be possible, except (maybe) for cheating a whithering potion
                         deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(item));
                     }
+                } else if (damager instanceof Trident) {
 
+                    boolean isInOffhand = false;
+                    if (killerPlayer.getEquipment() != null) {
+                        isInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType() == Material.TRIDENT;
+                    }
+                    boolean isInMainhand = false;
+                    if (killerPlayer.getEquipment() != null) {
+                        isInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType() == Material.TRIDENT;
+                    }
+
+                    ItemStack killerWeapon = null;
+
+
+                    if (isInOffhand && !isInMainhand) {
+                        killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
+                    } else if (isInMainhand) {
+                        killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
+                    }
+
+                    if (killerWeapon != null) {
+                        deathMessage.append(" with his ");
+                        deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
+                    }
                 } else {
                     Projectile projectileDamager = (Projectile) damager;
 
@@ -246,6 +269,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 if (killerEquipment != null) {
                     if (killerEquipment.getItemInMainHand().getType().name().contains("SWORD")) {
                         deathMessage.append(" by slashing it with his ").color(DARK_GRAY);
+                    } else if (killerEquipment.getItemInMainHand().getType() == Material.TRIDENT) {
+                        deathMessage.append(" by stabbing it with his ").color(DARK_GRAY);
                     } else {
                         deathMessage.append(" by hitting it repeatedly with his ").color(DARK_GRAY);
                     }
@@ -255,6 +280,36 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
                 TextComponent killerWeaponComponent = TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon);
                 deathMessage.append(killerWeaponComponent);
+
+            } else if (damager instanceof LightningStrike) {
+                deathMessage.append(" by summoning a Lightning Bolt");
+
+                boolean isInOffhand = false;
+                if (killerPlayer.getEquipment() != null) {
+                    isInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType() == Material.TRIDENT;
+                }
+                boolean isInMainhand = false;
+                if (killerPlayer.getEquipment() != null) {
+                    isInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType() == Material.TRIDENT;
+                }
+
+                ItemStack killerWeapon = null;
+
+
+                if (isInOffhand && !isInMainhand) {
+                    killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
+                } else if (isInMainhand) {
+                    killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
+                }
+
+                if (killerWeapon != null) {
+                    deathMessage.append(" with his ");
+                    deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
+                }
+
+
+            } else {
+                deathMessage.append("Other damager! Name: " + damager.getName() + "; " + damager.getType()).color(RED);
 
             }
 
@@ -272,6 +327,11 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
             // If cause == FIRE_TICK && getKiller == Player, this is cased by Fire* on Playerweapon
+            // Fire_Tick = "Indirekter Schaden" (Brennen)
+            deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
+
+        } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE) {
+            // Fire = "Direkter Schaden" (Blitz)
             deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FALL) {

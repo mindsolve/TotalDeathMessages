@@ -57,6 +57,10 @@ public class NMSItem {
 
             String itemName = WordUtils.capitalize(itemStack.getType().name().toLowerCase().replaceAll("_", " "));
 
+            if (itemStack.getType() == Material.TRIDENT) {
+                itemName = "giant derpy fork";
+            }
+
             if (meta.hasDisplayName()) {
                 name = itemName + " \"" + meta.getDisplayName() + "\"";
             } else {
