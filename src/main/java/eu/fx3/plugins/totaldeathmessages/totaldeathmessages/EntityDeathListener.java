@@ -257,6 +257,10 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     }
                 }
 
+            } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.THORNS) {
+                // Thorns
+                //TODO: Find better message
+                deathMessage.append(" by letting his armor do the job for him");
 
             } else if (damager instanceof Player) {
                 // Keine Todeswaffe kann in der linken (offhand) getragen werden und töten, außer Bogen.
