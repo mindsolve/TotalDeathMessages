@@ -225,28 +225,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     }
                 } else if (damager instanceof Trident) {
 
-                    boolean isInOffhand = false;
-                    if (killerPlayer.getEquipment() != null) {
-                        isInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType() == Material.TRIDENT;
-                    }
-                    boolean isInMainhand = false;
-                    if (killerPlayer.getEquipment() != null) {
-                        isInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType() == Material.TRIDENT;
-                    }
-
-                    ItemStack killerWeapon = null;
-
-
-                    if (isInOffhand && !isInMainhand) {
-                        killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
-                    } else if (isInMainhand) {
-                        killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
-                    }
-
-                    if (killerWeapon != null) {
-                        deathMessage.append(" with his ");
-                        deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
-                    }
+                    getTridentMessage(killerPlayer, deathMessage);
                 } else {
                     Projectile projectileDamager = (Projectile) damager;
 
@@ -288,28 +267,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             } else if (damager instanceof LightningStrike) {
                 deathMessage.append(" by summoning a Lightning Bolt");
 
-                boolean isInOffhand = false;
-                if (killerPlayer.getEquipment() != null) {
-                    isInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType() == Material.TRIDENT;
-                }
-                boolean isInMainhand = false;
-                if (killerPlayer.getEquipment() != null) {
-                    isInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType() == Material.TRIDENT;
-                }
-
-                ItemStack killerWeapon = null;
-
-
-                if (isInOffhand && !isInMainhand) {
-                    killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
-                } else if (isInMainhand) {
-                    killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
-                }
-
-                if (killerWeapon != null) {
-                    deathMessage.append(" with his ");
-                    deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
-                }
+                getTridentMessage(killerPlayer, deathMessage);
 
 
             } else {
@@ -370,6 +328,31 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         }
 
+    }
+
+    private void getTridentMessage(Player killerPlayer, ComponentBuilder deathMessage) {
+        boolean isInOffhand = false;
+        if (killerPlayer.getEquipment() != null) {
+            isInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType() == Material.TRIDENT;
+        }
+        boolean isInMainhand = false;
+        if (killerPlayer.getEquipment() != null) {
+            isInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType() == Material.TRIDENT;
+        }
+
+        ItemStack killerWeapon = null;
+
+
+        if (isInOffhand && !isInMainhand) {
+            killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
+        } else if (isInMainhand) {
+            killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
+        }
+
+        if (killerWeapon != null) {
+            deathMessage.append(" with his ");
+            deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
+        }
     }
 
 
