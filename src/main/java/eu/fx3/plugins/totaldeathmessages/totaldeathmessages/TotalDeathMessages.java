@@ -14,6 +14,7 @@ public final class TotalDeathMessages extends JavaPlugin {
     FileWatcher configWatcher;
     private static TotalDeathMessages instance;
     private NMSItem nmsItem;
+    private TDMGlobalSettings globalSettings;
     public List<PlayerKillStats> playerKillList = new ArrayList<PlayerKillStats>();
 
     @Override
@@ -24,8 +25,13 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Create NSMItem object
         nmsItem = new NMSItem();
 
-        // Register EventListener
+        // Create TDMGlobalSettings object
+        globalSettings = new TDMGlobalSettings();
+
+        // Register EventListener for EntityDeathEvent
         getServer().getPluginManager().registerEvents(new EntityDeathListener(), this);
+        // Register EventListener for ProjectileLaunchEvent
+        getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(), this);
 
         // Copy default config if it doesn't exist
         File configFile = new File(getDataFolder(), "config.yml");
@@ -52,7 +58,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         mobdeathmsgs.setTabCompleter(new MobdeathCommandTabcomplete());
 
         // Start KillingSpree Timer
-        BukkitTask task = new KillingspreeMessageTask(this).runTaskTimer(this, 25*5, 25*5);
+        BukkitTask task = new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
 
         // Log success
         getLogger().info(ChatColor.GREEN + "Plugin erfolgreich initialisiert!");
@@ -78,4 +84,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         return this.nmsItem;
     }
 
+    public TDMGlobalSettings getGlobalSettings() {
+        return this.globalSettings;
+    }
 }

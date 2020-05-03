@@ -31,7 +31,9 @@ import static net.md_5.bungee.api.ChatColor.*;
 
 
 public class EntityDeathListener implements org.bukkit.event.Listener {
-    JavaPlugin plugin = TotalDeathMessages.getInstance();
+    TotalDeathMessages instance = TotalDeathMessages.getInstance();
+    JavaPlugin plugin = (JavaPlugin) instance;
+    TDMGlobalSettings globalSettings = instance.getGlobalSettings();
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
@@ -265,7 +267,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 deathMessage.append(killerWeaponComponent);
 
             } else if (damager instanceof LightningStrike) {
-                deathMessage.append(" by summoning a Lightning Bolt");
+                deathMessage.append(" by summoning a ").color(DARK_GRAY).append("Lightning Bolt").color(AQUA).append("").color(DARK_GRAY);
 
                 getTridentMessage(killerPlayer, deathMessage);
 
@@ -331,27 +333,11 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
     }
 
     private void getTridentMessage(Player killerPlayer, ComponentBuilder deathMessage) {
-        boolean isInOffhand = false;
-        if (killerPlayer.getEquipment() != null) {
-            isInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType() == Material.TRIDENT;
-        }
-        boolean isInMainhand = false;
-        if (killerPlayer.getEquipment() != null) {
-            isInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType() == Material.TRIDENT;
-        }
+        ItemStack killerTrident = globalSettings.getLastThrownTrident(killerPlayer.getUniqueId());
 
-        ItemStack killerWeapon = null;
-
-
-        if (isInOffhand && !isInMainhand) {
-            killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
-        } else if (isInMainhand) {
-            killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
-        }
-
-        if (killerWeapon != null) {
+        if (killerTrident != null) {
             deathMessage.append(" with his ");
-            deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
+            deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerTrident));
         }
     }
 
