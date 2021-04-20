@@ -59,8 +59,8 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Register Tab-Complete for command
         mobdeathmsgs.setTabCompleter(new MobdeathCommandTabcomplete());
 
-        // Start KillingSpree Timer
-        BukkitTask task = new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
+        // Start KillingSpree Timer to fire every 5 ticks
+        new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
 
         // Log success
         getLogger().info(ChatColor.GREEN + "Plugin erfolgreich initialisiert!");
