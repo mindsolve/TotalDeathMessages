@@ -51,7 +51,6 @@ public class NMSItem {
             String jsonItem = this.itemToJson(itemStack);
             BaseComponent[] hoverEventComponents = new BaseComponent[]{new TextComponent(jsonItem)};
             event = new HoverEvent(Action.SHOW_ITEM, hoverEventComponents);
-            int amount = itemStack.getAmount();
             ItemMeta meta = itemStack.getItemMeta();
             String name;
 
