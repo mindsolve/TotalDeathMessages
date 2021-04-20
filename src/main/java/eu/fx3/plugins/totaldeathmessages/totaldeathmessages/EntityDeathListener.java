@@ -126,8 +126,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         // Get name for killed entity (or custom name if mob is named)
         String killedEntityName = hasCustomName ? deadEntity.getCustomName().trim() : deadEntity.getName().trim();
         killedEntityName = WordUtils.capitalize(killedEntityName);
-        String originalEntityName = deadEntity.getType().getName().replace("_", " ");
-        originalEntityName = WordUtils.capitalize(originalEntityName);
 
         /*
         TODO:
@@ -140,10 +138,17 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         ComponentBuilder deathMessage = new ComponentBuilder().color(DARK_GRAY);
         if (hasCustomName) {
+            // Get killed entity type (e.g. "Ender Dragon", "Bee")
+            String killedEntityTypeName = deadEntity.getType().toString().replace("_", " ");
+            killedEntityTypeName = WordUtils.capitalizeFully(killedEntityTypeName);
+
             deathMessage.append(killedEntityName).color(GOLD);
-            deathMessage.append(" (that poor ").color(DARK_GRAY).append(originalEntityName).color(BLUE).append(")").color(DARK_GRAY);
+
+            // Append entity type if the entity had a custom name (nametag)
+            deathMessage.append(" (that poor ").color(DARK_GRAY).append(killedEntityTypeName).color(BLUE).append(")").color(DARK_GRAY);
         } else {
-            // Attach correct article
+            // Attach correct article as the entity name is the entity type ("Ghast" -> "A Ghast"; "Enderman" -> "An Enderman")
+            // Beware: This "algorithm" doesn't respect special cases ("a unit"/"an unit")
             String article = "A" + (killedEntityName.matches("^[AEIOU].*") ? "n " : " ");
             deathMessage.append(article).color(DARK_GRAY).append(killedEntityName).color(BLUE);
         }
