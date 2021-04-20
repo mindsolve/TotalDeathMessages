@@ -276,9 +276,37 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
                 getTridentMessage(killerPlayer, deathMessage);
 
+            } else if (damager instanceof AreaEffectCloud) {
+                AreaEffectCloud areaEffectCloudDamager = (AreaEffectCloud) damager;
+
+
+                if (areaEffectCloudDamager.getBasePotionData().getType().equals(PotionType.INSTANT_DAMAGE)) {
+                    deathMessage
+                            .append(" by throwing a ")
+                            .append("Lingering Potion of ").color(DARK_GRAY)
+                            .append("Harming "
+                                    + (areaEffectCloudDamager.getBasePotionData().isUpgraded() ? "II" : "I")).color(AQUA);
+                } else {
+                    // This should not be possible with Vanialla game
+
+                    // Get the potion effect type
+                    PotionType areaEffectCloudDamagerType = areaEffectCloudDamager.getBasePotionData().getType();
+                    // Make the effect type human-readable
+                    String areaEffectCloudDamagerTypeName = WordUtils.capitalizeFully(
+                            areaEffectCloudDamagerType.name().replaceAll("_", " "));
+
+                    // Add effect level, if upgradeable
+                    if (areaEffectCloudDamagerType.isUpgradeable()) {
+                        areaEffectCloudDamagerTypeName += areaEffectCloudDamager.getBasePotionData().isUpgraded() ? " II" : " I";
+                    }
+
+                    deathMessage.append(" by creating an ")
+                            .append("Area Effect Cloud with ").color(DARK_GRAY)
+                            .append(areaEffectCloudDamagerTypeName).color(AQUA);
+                }
 
             } else {
-                deathMessage.append("Other damager! Name: " + damager.getName() + "; " + damager.getType()).color(RED);
+                deathMessage.append(" Other damager! Name: " + damager.getName() + "; " + damager.getType()).color(RED);
 
             }
 
