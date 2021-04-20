@@ -36,7 +36,9 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Copy default config if it doesn't exist
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
-            getDataFolder().mkdir();
+            if (!getDataFolder().isDirectory() && !getDataFolder().mkdir()) {
+                getLogger().warning("The configuration directory could not be created!");
+            }
             saveDefaultConfig();
             getLogger().info("Standard-Konfiguration erstellt!");
         } else {
