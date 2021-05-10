@@ -181,13 +181,14 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     }
 
                     // TODO:
-                    //  Wenn killer zwischen Bogen und anderem Slot wechselt (Schwert), dann wird nichts angezeigt ("by shooting ")
-                    //  Außerdem, wenn killer keinen Bogen hat (abgeprallter Pfeil), dann ebenfalls nicht
+                    //  Nothing gets displayed ("by shooting ") if:
+                    //  - The killer switches between Bow and other slot (e.g. Sword)
+                    //  - The killer has no bow (ricocheted arrow)
 
                     if (killerPlayer.getEquipment() != null) {
                         ItemStack killerWeapon = null;
 
-                        //Könnte sowohl "BOW" also auch "CROSSBOW" sein
+                        // Could be "BOW" or "CROSSBOW"
                         boolean bowInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType().name().contains("BOW");
                         boolean bowInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType().name().contains("BOW");
 
@@ -201,9 +202,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                             deathMessage.append(" with his ").color(DARK_GRAY);
                             deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
                         }
-
-                        // Removed last part from ComponentBuilder
-                        //  deathMessage.removeComponent(deathMessage.getCursor());
                     }
 
 
@@ -249,13 +247,13 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 deathMessage.append(" by letting his armor do the job for him");
 
             } else if (damager instanceof Player) {
-                // Keine Todeswaffe kann in der linken (offhand) getragen werden und töten, außer Bogen.
-                // Bogen wird allerdings durch Projectile -> Arrow abgedeckt
+                // No killer weapon can be whielded in the offhand (left), except for bows.
+                // Bows should already be covered by Projectile -> Arrow
                 EntityEquipment killerEquipment = killerPlayer.getEquipment();
                 ItemStack killerWeapon = null;
 
-                // Evtl. könnte dies auftreten, wenn der Spieler keine Items im Inventar hat
-                // itemToTextComponent kann mit "null" umgehen (bare hands)
+                // This could happen if the player has no items in his inventory
+                // itemToTextComponent is capable of handling "null" (bare hands)
                 if (killerEquipment != null) {
                     if (killerEquipment.getItemInMainHand().getType().name().contains("SWORD")) {
                         deathMessage.append(" by slashing it with his ").color(DARK_GRAY);
@@ -278,7 +276,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
             } else if (damager instanceof AreaEffectCloud) {
                 AreaEffectCloud areaEffectCloudDamager = (AreaEffectCloud) damager;
-
 
                 if (areaEffectCloudDamager.getBasePotionData().getType().equals(PotionType.INSTANT_DAMAGE)) {
                     deathMessage
@@ -314,7 +311,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             deathMessage.append(" (How the heck did you do this? Event (block): " + ((EntityDamageByBlockEvent) deadEntity.getLastDamageCause()).getDamager().getType() + ")").color(DARK_RED);
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.MAGIC) {
-            // Might be an Arrow of Harming (I / II). Either we assume that here, or we ignore it (because we cant check: time of check vs time of arrow firing)
+            // Might be an Arrow of Harming (I / II). Either we assume that here, or we ignore it
+            // (because we can't check: time of check vs time of arrow firing)
 
             deathMessage.append(" using ").color(DARK_GRAY)
                     .append("Magic").color(AQUA)
@@ -324,11 +322,11 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
             // If cause == FIRE_TICK && getKiller == Player, this is cased by Fire* on Playerweapon
-            // Fire_Tick = "Indirekter Schaden" (Brennen)
+            // Fire_Tick = "Indirect Damage" (Burning)
             deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE) {
-            // Fire = "Direkter Schaden" (Blitz)
+            // Fire = "Direct Damage" (Lightning bolt)
             deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FALL) {

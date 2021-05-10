@@ -5,6 +5,13 @@ import org.bukkit.configuration.ConfigurationSection;
 import java.util.Set;
 import java.util.UUID;
 
+/*
+ TODO: Find better upgrade method
+    Currently, we upgrade from version x to the current version directly.
+    This would force us to create a direct conversion between every version and the current one.
+    Maybe we could instead upgrade to the next version? Then we only need a upgrade path between two versons
+*/
+
 public class MobdeathConfig {
     /**
      * This variable contains the current configuration version.

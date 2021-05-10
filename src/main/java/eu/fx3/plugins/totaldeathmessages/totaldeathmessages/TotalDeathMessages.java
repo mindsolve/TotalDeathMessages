@@ -40,7 +40,7 @@ public final class TotalDeathMessages extends JavaPlugin {
                 getLogger().warning("The configuration directory could not be created!");
             }
             saveDefaultConfig();
-            getLogger().info("Standard-Konfiguration erstellt!");
+            getLogger().info("Default configuration created!");
         } else {
             MobdeathConfig.upgradeConfigVersion(getConfig().getInt("config-version", 1));
             reloadConfig();
@@ -63,7 +63,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
 
         // Log success
-        getLogger().info(ChatColor.GREEN + "Plugin erfolgreich initialisiert!");
+        getLogger().info(ChatColor.GREEN + "Plugin successfully initialized!");
 
     }
 
@@ -74,7 +74,7 @@ public final class TotalDeathMessages extends JavaPlugin {
     }
 
     protected void updateConfig() {
-        getLogger().info("Reloaded config.");
+        getLogger().info("Configuration reloaded.");
         reloadConfig();
     }
 

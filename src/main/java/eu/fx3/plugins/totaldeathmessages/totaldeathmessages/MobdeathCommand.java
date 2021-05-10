@@ -11,19 +11,19 @@ import static net.md_5.bungee.api.ChatColor.*;
 
 /*
 TODO:
-    switch dass bei killing spree nur ersten beiden nachrichten angezeigt werden,
-    dann nach dem killing spree eine zusammenfassende meldung (whoa, player has killed 200000 mobs in his killing spree!)
+    Switch/config for displaying a "condensed" message: only first two messages,
+    then after the killing spree ended a summary (whoa, player has killed 200000 mobs in his killing spree!)
  */
 
-// TODO: Bessere Erklärung, was Einstellungen machen
-// TODO: Bessere visuelle Darstellung
+// TODO: Better descriptions for settings
+// TODO: Better visual representation
 // TODO: JavaDoc this file
 
 
 public class MobdeathCommand implements CommandExecutor {
     static TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
 
-    // This method is called, when somebody uses our command
+    // This method is called when somebody uses our command
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
