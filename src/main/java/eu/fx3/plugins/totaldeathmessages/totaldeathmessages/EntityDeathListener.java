@@ -19,6 +19,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 
@@ -39,7 +41,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity deadEntity = event.getEntity();
         Player killerPlayer = deadEntity.getKiller();
-        PlayerKillStats currentKillStat = null;
 
         long killTimestamp = Instant.now().getEpochSecond();
 
@@ -52,6 +53,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         if (deadEntity instanceof Player) {
             return;
         }
+
+        PlayerKillStats currentKillStat = instance.playerKillStats.get(killerPlayer.getUniqueId());
 
         if (plugin.getConfig().contains("ignore-world-types")) {
             for (String worldType : plugin.getConfig().getStringList("ignore-world-types")) {
@@ -87,38 +90,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             return;
         }
 
-        // 2. try: Set statistics, if in List
-        int killSpreeTimeout = plugin.getConfig().getInt("killing-spree-timeout");
-        boolean isInList = false;
-        for (PlayerKillStats item : ((TotalDeathMessages) plugin).playerKillList) {
-            if (item.playerName.equals(killerPlayer.getName())) {
-
-                if (killTimestamp - item.lastKillTime <= killSpreeTimeout) {
-                    // Killing spree
-                    item.spreeKillCount++;
-                } else {
-                    item.spreeKillCount = 1;
-                }
-
-                item.lastKillTime = killTimestamp;
-                item.totalKillCount++;
-
-                currentKillStat = item;
-                isInList = true;
-                break;
-            }
-        }
-
-        // Add player to list
-        if (!isInList) {
-            PlayerKillStats killStat = new PlayerKillStats();
-            killStat.spreeKillCount = 1;
-            killStat.totalKillCount = 1;
-            killStat.playerName = killerPlayer.getName();
-
-            ((TotalDeathMessages) plugin).playerKillList.add(killStat);
-            currentKillStat = killStat;
-        }
+        // 2. try: Set statistics, if in HashMap
+        currentKillStat = setPlayerKillStat(killTimestamp, currentKillStat);
 
         // Check if entity has a custom name
         boolean hasCustomName = deadEntity.getCustomName() != null;
@@ -361,6 +334,33 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         }
 
+    }
+
+    /**
+     * Updates or creates the Players {@link PlayerKillStats} object
+     *
+     * @param killTimestamp   Epoch kill timestamp (e.g. from {@link Instant#getEpochSecond()})
+     * @param currentKillStat Existing {@link PlayerKillStats} object or null
+     * @return Updated {@link PlayerKillStats} object
+     */
+    @NotNull
+    private PlayerKillStats setPlayerKillStat(long killTimestamp, @Nullable PlayerKillStats currentKillStat) {
+        int killSpreeTimeout = plugin.getConfig().getInt("killing-spree-timeout");
+
+        if (currentKillStat == null) {
+            currentKillStat = new PlayerKillStats();
+        }
+
+        if (killTimestamp - currentKillStat.lastKillTime <= killSpreeTimeout) {
+            // Killing spree
+            currentKillStat.spreeKillCount++;
+        } else {
+            currentKillStat.spreeKillCount = 1;
+        }
+
+        currentKillStat.lastKillTime = killTimestamp;
+        currentKillStat.totalKillCount++;
+        return currentKillStat;
     }
 
     private void getTridentMessage(Player killerPlayer, ComponentBuilder deathMessage) {

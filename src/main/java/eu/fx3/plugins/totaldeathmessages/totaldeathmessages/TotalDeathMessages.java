@@ -4,18 +4,19 @@ import eu.fx3.plugins.totaldeathmessages.utils.NMSItem;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class TotalDeathMessages extends JavaPlugin {
     FileWatcher configWatcher;
     private static TotalDeathMessages instance;
     private NMSItem nmsItem;
     private TDMGlobalSettings globalSettings;
-    public List<PlayerKillStats> playerKillList = new ArrayList<PlayerKillStats>();
+
+    // TODO: Cleanup list (offline players)
+    public HashMap<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -59,7 +60,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Register Tab-Complete for command
         mobdeathmsgs.setTabCompleter(new MobdeathCommandTabcomplete());
 
-        // Start KillingSpree Timer to fire every 5 ticks
+        // Start KillingSpree Timer to fire every 5 seconds
         new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
 
         // Log success

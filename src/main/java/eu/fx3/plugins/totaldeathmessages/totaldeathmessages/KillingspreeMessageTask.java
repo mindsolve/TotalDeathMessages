@@ -9,6 +9,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static net.md_5.bungee.api.ChatColor.*;
 
@@ -19,35 +21,46 @@ import static net.md_5.bungee.api.ChatColor.*;
 public class KillingspreeMessageTask extends BukkitRunnable {
     private final JavaPlugin plugin;
     private final int killSpreeTimeout;
-    private List<Player> playerList;
 
     public KillingspreeMessageTask(JavaPlugin plugin) {
         this.plugin = plugin;
+
         // Note: This config might change.
         // As we reload the config as soon as something happends, maybe move to loop/run()?
         this.killSpreeTimeout = plugin.getConfig().getInt("killing-spree-timeout");
-        playerList = getPlayersForReducedKillSpreeMessages();
     }
 
     @Override
     public void run() {
-        playerList = getPlayersForReducedKillSpreeMessages();
+        List<Player> playerList = getPlayersForReducedKillSpreeMessages();
         ComponentBuilder chatMessage = new ComponentBuilder().color(DARK_GRAY);
 
-        for (PlayerKillStats killStats : ((TotalDeathMessages) plugin).playerKillList) {
-            if (killStats.spreeKillCount > 2 && (Instant.now().getEpochSecond() - killStats.lastKillTime) > killSpreeTimeout) {
+        // TODO: What is the performance impact of running this with a huge userbase?
+
+        for (Map.Entry<UUID, PlayerKillStats> entry : ((TotalDeathMessages) plugin).playerKillStats.entrySet()) {
+            PlayerKillStats killStat = entry.getValue();
+            UUID playerUUID = entry.getKey();
+
+            if (killStat.spreeKillCount > 2 && (Instant.now().getEpochSecond() - killStat.lastKillTime) > killSpreeTimeout) {
                 // We are interested
-                chatMessage.append("Player ").append(killStats.playerName).color(DARK_PURPLE);
+
+                Player player = plugin.getServer().getPlayer(playerUUID);
+                if (player == null) {
+                    continue;
+                }
+
+                chatMessage.append("Player ").append(player.getDisplayName()).color(DARK_PURPLE);
                 chatMessage.append(" has finished his killing spree with ").color(DARK_GRAY);
-                chatMessage.append(killStats.spreeKillCount + " kills!").color(RED);
-                sendMessage(chatMessage.create());
-                killStats.spreeKillCount = 0;
+                chatMessage.append(killStat.spreeKillCount + " kills!").color(RED);
+
+                sendMessage(chatMessage.create(), playerList);
+                killStat.spreeKillCount = 0;
             }
         }
 
     }
 
-    private void sendMessage(BaseComponent[] message) {
+    private void sendMessage(BaseComponent[] message, List<Player> playerList) {
         for (Player player : playerList) {
             player.spigot().sendMessage(message);
         }
