@@ -301,7 +301,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FALL) {
-            deathMessage.append(" by letting him ").color(DARK_GRAY).append("fall to death.").color(BLUE);
+            deathMessage.append(" by letting him ").color(DARK_GRAY).append("fall to death").color(BLUE).append("").color(DARK_GRAY);
 
         } else {
             deathMessage.append(" (How the heck did you do this? Event (other): " + deadEntity.getLastDamageCause().getCause() + ")").color(DARK_RED);
