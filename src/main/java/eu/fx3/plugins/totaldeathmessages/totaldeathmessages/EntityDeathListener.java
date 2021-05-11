@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
+import java.util.List;
 
 import static net.md_5.bungee.api.ChatColor.*;
 
@@ -34,7 +35,7 @@ import static net.md_5.bungee.api.ChatColor.*;
 
 public class EntityDeathListener implements org.bukkit.event.Listener {
     TotalDeathMessages instance = TotalDeathMessages.getInstance();
-    JavaPlugin plugin = (JavaPlugin) instance;
+    JavaPlugin plugin = instance;
     TDMGlobalSettings globalSettings = instance.getGlobalSettings();
 
     @EventHandler
@@ -128,7 +129,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         // Add info for pets (owner), if applicable
         if (deadEntity instanceof Tameable) {
-            deathMessage.append(getPetTextComponent(deadEntity).create());
+            deathMessage.append(getPetTextComponent((Tameable) deadEntity).create());
         }
 
         deathMessage.append(" was killed by player ").color(DARK_GRAY).append(killerPlayer.getDisplayName()).color(DARK_PURPLE);
@@ -373,33 +374,44 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
     }
 
 
+    /**
+     * Checks whether the specified world is ignored or not.
+     *
+     * @param eventWorldName Name of the world the event occured in
+     * @return True if the world is ignored; false otherwise.
+     */
     private boolean isWorldIgnored(String eventWorldName) {
-        if (plugin.getConfig().contains("ignore-worlds")) {
-            for (String worldName : plugin.getConfig().getStringList("ignore-worlds")) {
-                if (eventWorldName.equals(worldName)) {
-                    return true;
-                }
-            }
+        if (!plugin.getConfig().contains("ignore-worlds")) {
+            return false;
         }
-        return false;
+
+        @NotNull List<String> ignoredWorldNames = plugin.getConfig().getStringList("ignore-worlds");
+        return ignoredWorldNames.contains(eventWorldName);
     }
 
 
-    private ComponentBuilder getPetTextComponent(LivingEntity deadEntity) {
-        Player killerPlayer = deadEntity.getKiller();
-        ComponentBuilder thisPart = new ComponentBuilder("").color(DARK_GRAY);
+    /**
+     * Generates a ComponentBuilder with details about a tamed entity, e.g. a tamed dog.
+     *
+     * @param deadEntity The killed tameable entity
+     * @return A ComponentBuilder with a pet specific message, if the entitiy is tamed & owned
+     */
+    @NotNull
+    private ComponentBuilder getPetTextComponent(Tameable deadEntity) {
+        @NotNull ComponentBuilder result = new ComponentBuilder("").color(DARK_GRAY);
 
-        Tameable deadTameableEntity = (Tameable) deadEntity;
-        if (deadTameableEntity.isTamed() && deadTameableEntity.getOwner() != null) {
-            assert killerPlayer != null;
-            if (!killerPlayer.getName().equals(deadTameableEntity.getOwner().getName())) {
-                thisPart.append(", ").append(deadTameableEntity.getOwner().getName()).color(DARK_PURPLE).append("s pet,").color(DARK_GRAY);
+        Player killerPlayer = deadEntity.getKiller();
+
+        if (deadEntity.isTamed() && deadEntity.getOwner() != null && killerPlayer != null) {
+            AnimalTamer deadEntityOwner = deadEntity.getOwner();
+            if (killerPlayer.getName().equals(deadEntityOwner.getName())) {
+                result.append(", the killer's pet,").color(DARK_GRAY);
             } else {
-                thisPart.append(", the killers pet,").color(DARK_GRAY);
+                result.append(", ").append(deadEntityOwner.getName()).color(DARK_PURPLE).append("'s pet,").color(DARK_GRAY);
             }
         }
 
-        return thisPart;
+        return result;
     }
 
 }
