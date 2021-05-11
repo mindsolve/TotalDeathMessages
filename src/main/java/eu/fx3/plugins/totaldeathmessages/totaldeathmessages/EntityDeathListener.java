@@ -178,7 +178,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         }
                     }
 
-
                 } else if (damager instanceof ThrowableProjectile) {
                     ThrowableProjectile throwableDamager = (ThrowableProjectile) damager;
                     deathMessage.append("by throwing his ");
@@ -202,9 +201,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         // This should not be possible, except (maybe) for cheating a whithering potion
                         deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(item));
                     }
-                } else if (damager instanceof Trident) {
 
-                    getTridentMessage(killerPlayer, deathMessage);
                 } else {
                     Projectile projectileDamager = (Projectile) damager;
 
