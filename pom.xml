@@ -6,7 +6,7 @@
 
     <groupId>eu.fx3.plugins.total-death-messages</groupId>
     <artifactId>total-death-messages</artifactId>
-    <version>1.5</version>
+    <version>1.6</version>
     <packaging>jar</packaging>
 
     <name>Total Death Messages</name>
