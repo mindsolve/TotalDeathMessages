@@ -2,7 +2,7 @@ package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
-import eu.fx3.plugins.totaldeathmessages.utils.NMSItem;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,7 +15,7 @@ import java.util.UUID;
 public final class TotalDeathMessages extends JavaPlugin {
     private Yaml config;
     private static TotalDeathMessages instance;
-    private NMSItem nmsItem;
+
     private TDMGlobalSettings globalSettings;
 
     // TODO: Cleanup list (offline players)
@@ -25,9 +25,6 @@ public final class TotalDeathMessages extends JavaPlugin {
     public void onEnable() {
         // Save object reference
         instance = this;
-
-        // Create NSMItem object
-        nmsItem = new NMSItem();
 
         // Create TDMGlobalSettings object
         globalSettings = new TDMGlobalSettings();
@@ -82,10 +79,6 @@ public final class TotalDeathMessages extends JavaPlugin {
 
     public static TotalDeathMessages getInstance() {
         return instance;
-    }
-
-    public NMSItem getNmsItem() {
-        return this.nmsItem;
     }
 
     public TDMGlobalSettings getGlobalSettings() {

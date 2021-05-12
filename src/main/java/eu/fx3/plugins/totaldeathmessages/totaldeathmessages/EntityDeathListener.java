@@ -1,8 +1,8 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
+import eu.fx3.plugins.totaldeathmessages.utils.TextComponentHelper;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -152,7 +152,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         meta.setBasePotionData(arrowDamager.getBasePotionData());
                         killerArrow.setItemMeta(meta);
                         deathMessage.append("a ");
-                        deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerArrow));
+                        deathMessage.append(TextComponentHelper.itemToTextComponent(killerArrow));
                     }
 
                     // TODO:
@@ -175,14 +175,14 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
                         if (killerWeapon != null) {
                             deathMessage.append(" with his ").color(DARK_GRAY);
-                            deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon));
+                            deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
                         }
                     }
 
                 } else if (damager instanceof ThrowableProjectile) {
                     ThrowableProjectile throwableDamager = (ThrowableProjectile) damager;
                     deathMessage.append("by throwing his ");
-                    TextComponent killerWeaponComponent = TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(throwableDamager.getItem());
+                    BaseComponent killerWeaponComponent = TextComponentHelper.itemToTextComponent(throwableDamager.getItem());
                     deathMessage.append(killerWeaponComponent);
 
                 } else if (damager instanceof ThrownPotion) {
@@ -200,7 +200,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                                 (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I")).color(AQUA);
                     } else {
                         // This should not be possible, except (maybe) for cheating a whithering potion
-                        deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(item));
+                        deathMessage.append(TextComponentHelper.itemToTextComponent(item));
                     }
 
                 } else {
@@ -238,7 +238,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     killerWeapon = killerEquipment.getItemInMainHand();
                 }
 
-                TextComponent killerWeaponComponent = TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerWeapon);
+                BaseComponent killerWeaponComponent = TextComponentHelper.itemToTextComponent(killerWeapon);
                 deathMessage.append(killerWeaponComponent);
 
             } else if (damager instanceof LightningStrike) {
@@ -367,7 +367,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         if (killerTrident != null) {
             deathMessage.append(" with his ");
-            deathMessage.append(TotalDeathMessages.getInstance().getNmsItem().itemToTextComponent(killerTrident));
+            deathMessage.append(TextComponentHelper.itemToTextComponent(killerTrident));
         }
     }
 
