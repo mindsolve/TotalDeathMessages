@@ -93,6 +93,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         // 2. try: Set statistics, if in HashMap
         currentKillStat = setPlayerKillStat(killTimestamp, currentKillStat);
+        instance.playerKillStats.put(killerPlayer.getUniqueId(), currentKillStat);
 
         // Check if entity has a custom name
         boolean hasCustomName = deadEntity.getCustomName() != null;
