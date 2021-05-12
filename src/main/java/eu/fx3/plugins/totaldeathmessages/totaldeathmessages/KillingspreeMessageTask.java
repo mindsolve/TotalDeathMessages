@@ -20,18 +20,14 @@ import static net.md_5.bungee.api.ChatColor.*;
 
 public class KillingspreeMessageTask extends BukkitRunnable {
     private final JavaPlugin plugin;
-    private final int killSpreeTimeout;
 
     public KillingspreeMessageTask(JavaPlugin plugin) {
         this.plugin = plugin;
-
-        // Note: This config might change.
-        // As we reload the config as soon as something happends, maybe move to loop/run()?
-        this.killSpreeTimeout = plugin.getConfig().getInt("killing-spree-timeout");
     }
 
     @Override
     public void run() {
+        int killSpreeTimeout = ((TotalDeathMessages)plugin).getPluginConfig().getInt("killing-spree-timeout");
         List<Player> playerList = getPlayersForReducedKillSpreeMessages();
         ComponentBuilder chatMessage = new ComponentBuilder().color(DARK_GRAY);
 

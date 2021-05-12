@@ -1,16 +1,19 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
+import de.leonhard.storage.Yaml;
+import de.leonhard.storage.internal.settings.ConfigSettings;
 import eu.fx3.plugins.totaldeathmessages.utils.NMSItem;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 
 public final class TotalDeathMessages extends JavaPlugin {
-    FileWatcher configWatcher;
+    private Yaml config;
     private static TotalDeathMessages instance;
     private NMSItem nmsItem;
     private TDMGlobalSettings globalSettings;
@@ -42,15 +45,14 @@ public final class TotalDeathMessages extends JavaPlugin {
             }
             saveDefaultConfig();
             getLogger().info("Default configuration created!");
-        } else {
-            MobdeathConfig.upgradeConfigVersion(getConfig().getInt("config-version", 1));
-            reloadConfig();
         }
 
-        // Register file watcher for config file
-        configWatcher = new FileWatcher(configFile, this::updateConfig);
-        configWatcher.start();
+        // Initialise config
+        config = new Yaml(configFile);
+        // Set config mode
+        config.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 
+        MobdeathConfig.upgradeConfigVersion(config.getOrDefault("config-version", 1));
 
         PluginCommand tdmCommand = this.getCommand("tdm");
         assert tdmCommand != null;
@@ -70,8 +72,7 @@ public final class TotalDeathMessages extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Stop file watcher thread
-        configWatcher.stopThread();
+
     }
 
     protected void updateConfig() {
@@ -89,5 +90,10 @@ public final class TotalDeathMessages extends JavaPlugin {
 
     public TDMGlobalSettings getGlobalSettings() {
         return this.globalSettings;
+    }
+
+    @NotNull
+    public Yaml getPluginConfig() {
+        return config;
     }
 }

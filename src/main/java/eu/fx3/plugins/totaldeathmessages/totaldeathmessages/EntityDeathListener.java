@@ -57,8 +57,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         PlayerKillStats currentKillStat = instance.playerKillStats.get(killerPlayer.getUniqueId());
 
-        if (plugin.getConfig().contains("ignore-world-types")) {
-            for (String worldType : plugin.getConfig().getStringList("ignore-world-types")) {
+        if (instance.getPluginConfig().contains("ignore-world-types")) {
+            for (String worldType : instance.getPluginConfig().getStringList("ignore-world-types")) {
                 try {
                     if (deadEntity.getWorld().getEnvironment() == World.Environment.valueOf(worldType)) {
                         return;
@@ -73,8 +73,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             return;
         }
 
-        if (plugin.getConfig().contains("ignore-entities")) {
-            for (String entityName : plugin.getConfig().getStringList("ignore-entities")) {
+        if (instance.getPluginConfig().contains("ignore-entities")) {
+            for (String entityName : instance.getPluginConfig().getStringList("ignore-entities")) {
                 try {
                     EntityType entityTypeToIgnore = EntityType.valueOf(entityName.toUpperCase());
                     if (deadEntity.getType() == entityTypeToIgnore) {
@@ -344,7 +344,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
      */
     @NotNull
     private PlayerKillStats setPlayerKillStat(long killTimestamp, @Nullable PlayerKillStats currentKillStat) {
-        int killSpreeTimeout = plugin.getConfig().getInt("killing-spree-timeout");
+        int killSpreeTimeout = instance.getPluginConfig().getInt("killing-spree-timeout");
 
         if (currentKillStat == null) {
             currentKillStat = new PlayerKillStats();
@@ -379,11 +379,11 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
      * @return True if the world is ignored; false otherwise.
      */
     private boolean isWorldIgnored(String eventWorldName) {
-        if (!plugin.getConfig().contains("ignore-worlds")) {
+        if (!instance.getPluginConfig().contains("ignore-worlds")) {
             return false;
         }
 
-        @NotNull List<String> ignoredWorldNames = plugin.getConfig().getStringList("ignore-worlds");
+        @NotNull List<String> ignoredWorldNames = instance.getPluginConfig().getStringList("ignore-worlds");
         return ignoredWorldNames.contains(eventWorldName);
     }
 

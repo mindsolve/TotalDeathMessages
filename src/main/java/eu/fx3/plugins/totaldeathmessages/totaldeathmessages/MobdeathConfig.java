@@ -1,8 +1,8 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
-import org.bukkit.configuration.ConfigurationSection;
+import de.leonhard.storage.Yaml;
+import de.leonhard.storage.sections.FlatFileSection;
 
-import java.util.Set;
 import java.util.UUID;
 
 /*
@@ -21,37 +21,30 @@ public class MobdeathConfig {
 
     // Reference to main plugin class
     static TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
+    // Reference to global config
+    static Yaml config = pluginInstance.getPluginConfig();
 
     static boolean playerWantsAllMessages(UUID playerUUID) {
         return getPlayerConfig(playerUUID, "allMessages");
     }
 
     static boolean getPlayerConfig(UUID playerUUID, String setting) {
-        if (!getUserSection(playerUUID).isSet(setting)) {
-            setPlayerConfig(playerUUID, setting,true);
-        }
-        return getUserSection(playerUUID).getBoolean(setting);
+        return getUserSection(playerUUID).getOrSetDefault(setting, true);
     }
 
     static void setPlayerConfig(UUID playerUUID, String setting, boolean value) {
         getUserSection(playerUUID).set(setting, value);
-        pluginInstance.saveConfig();
     }
 
-    static ConfigurationSection getUserSection(UUID playerUUID) {
+    static FlatFileSection getUserSection(UUID playerUUID) {
         String sectionPath = "playerconfig." + playerUUID;
 
-        // Create Section, if it doesn't exist
-        if (!pluginInstance.getConfig().isConfigurationSection(sectionPath)) {
-            pluginInstance.getConfig().createSection(sectionPath);
-        }
-
-        return pluginInstance.getConfig().getConfigurationSection(sectionPath);
+        return config.getSection(sectionPath);
     }
-
 
     /**
      * Updates the plugin config file from a previous version, if needed
+     *
      * @param oldVersion The old plugin config version number
      */
     static void upgradeConfigVersion(int oldVersion) {
@@ -59,23 +52,6 @@ public class MobdeathConfig {
             case CONFIG_VERSION:
                 pluginInstance.getLogger().info("No config update necessary (current version).");
                 break;
-
-            case 1:
-                ConfigurationSection playerSection = pluginInstance.getConfig().getConfigurationSection("playerconfig");
-                if (playerSection == null) {
-                    pluginInstance.getConfig().createSection("playerconfig");
-                    pluginInstance.getConfig().set("config-version", 2);
-                    pluginInstance.saveConfig();
-                    return;
-                }
-
-                Set<String> playerUUIDs = playerSection.getKeys(false);
-                for (String section : playerUUIDs) {
-                    setPlayerConfig(UUID.fromString(section), "allMessages", playerSection.getBoolean(section));
-                }
-                pluginInstance.getConfig().set("config-version", 2);
-                pluginInstance.saveConfig();
-                return;
 
             default:
                 throw new IllegalArgumentException("Unknown config version!");
