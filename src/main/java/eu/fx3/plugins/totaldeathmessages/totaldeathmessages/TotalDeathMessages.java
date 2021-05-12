@@ -52,13 +52,13 @@ public final class TotalDeathMessages extends JavaPlugin {
         configWatcher.start();
 
 
-        PluginCommand mobdeathmsgs = this.getCommand("mobdeathmsgs");
-        assert mobdeathmsgs != null;
+        PluginCommand tdmCommand = this.getCommand("tdm");
+        assert tdmCommand != null;
 
         // Register command
-        mobdeathmsgs.setExecutor(new MobdeathCommand());
+        tdmCommand.setExecutor(new TdmCommand());
         // Register Tab-Complete for command
-        mobdeathmsgs.setTabCompleter(new MobdeathCommandTabcomplete());
+        tdmCommand.setTabCompleter(new TdmCommandTabcomplete());
 
         // Start KillingSpree Timer to fire every 5 seconds
         new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
