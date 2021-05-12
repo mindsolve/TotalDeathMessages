@@ -1,7 +1,9 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -11,8 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static net.md_5.bungee.api.ChatColor.*;
 
 // TODO: JavaDoc this file
 // TODO: Rewrite KillSpree end message
@@ -29,7 +29,7 @@ public class KillingspreeMessageTask extends BukkitRunnable {
     public void run() {
         int killSpreeTimeout = ((TotalDeathMessages)plugin).getPluginConfig().getInt("killing-spree-timeout");
         List<Player> playerList = getPlayersForReducedKillSpreeMessages();
-        ComponentBuilder chatMessage = new ComponentBuilder().color(DARK_GRAY);
+        TextComponent.Builder chatMessage = Component.text();
 
         // TODO: What is the performance impact of running this with a huge userbase?
 
@@ -45,21 +45,17 @@ public class KillingspreeMessageTask extends BukkitRunnable {
                     continue;
                 }
 
-                chatMessage.append("Player ").append(player.getDisplayName()).color(DARK_PURPLE);
-                chatMessage.append(" has finished his killing spree with ").color(DARK_GRAY);
-                chatMessage.append(killStat.spreeKillCount + " kills!").color(RED);
+                chatMessage.append(Component.text("Player ", ChatStyles.BASE_STYLE))
+                        .append(player.displayName().color(NamedTextColor.DARK_PURPLE))
+                        .append(Component.text(" has finished his killing spree with ", ChatStyles.BASE_STYLE))
+                        .append(Component.text(killStat.spreeKillCount + " kills!", NamedTextColor.RED));
 
-                sendMessage(chatMessage.create(), playerList);
+                Audience.audience(playerList).sendMessage(chatMessage.build());
+
                 killStat.spreeKillCount = 0;
             }
         }
 
-    }
-
-    private void sendMessage(BaseComponent[] message, List<Player> playerList) {
-        for (Player player : playerList) {
-            player.spigot().sendMessage(message);
-        }
     }
 
     private List<Player> getPlayersForReducedKillSpreeMessages() {
