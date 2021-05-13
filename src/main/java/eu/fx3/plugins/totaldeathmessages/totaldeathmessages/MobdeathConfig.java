@@ -20,8 +20,16 @@ public class MobdeathConfig {
     // Reference to global config
     static Yaml config = pluginInstance.getPluginConfig();
 
+    /**
+     * TODO: Remove hacky workaround for enum conversion
+     */
     static PlayerMessageSetting getPlayerMessageSetting(UUID playerUUID) {
-        return getUserSection(playerUUID).getOrSetDefault("message-setting", PlayerMessageSetting.ALL_MESSAGES);
+        Object messageSetting = getUserSection(playerUUID).getOrSetDefault("message-setting", PlayerMessageSetting.ALL_MESSAGES);
+        if (messageSetting instanceof String) {
+            pluginInstance.getLogger().warning("[config] returned string, not enum");
+            messageSetting = PlayerMessageSetting.valueOf((String) messageSetting);
+        }
+        return (PlayerMessageSetting) messageSetting;
     }
 
     static void setPlayerMessageSetting(UUID playerUUID, PlayerMessageSetting value) {
