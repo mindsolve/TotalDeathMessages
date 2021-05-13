@@ -29,11 +29,6 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Create TDMGlobalSettings object
         globalSettings = new TDMGlobalSettings();
 
-        // Register EventListener for EntityDeathEvent
-        getServer().getPluginManager().registerEvents(new EntityDeathListener(), this);
-        // Register EventListener for ProjectileLaunchEvent
-        getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(), this);
-
         // Copy default config if it doesn't exist
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
@@ -58,6 +53,11 @@ public final class TotalDeathMessages extends JavaPlugin {
         tdmCommand.setExecutor(new TdmCommand());
         // Register Tab-Complete for command
         tdmCommand.setTabCompleter(new TdmCommandTabcomplete());
+
+        // Register EventListener for EntityDeathEvent
+        getServer().getPluginManager().registerEvents(new EntityDeathListener(), this);
+        // Register EventListener for ProjectileLaunchEvent
+        getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(), this);
 
         // Start KillingSpree Timer to fire every 5 seconds
         new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
