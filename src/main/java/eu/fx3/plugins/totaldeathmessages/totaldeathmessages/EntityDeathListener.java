@@ -136,7 +136,13 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             deathMessage.append(getPetTextComponent((Tameable) deadEntity).create());
         }
 
-        deathMessage.append(" was killed by player ").color(DARK_GRAY).append(killerPlayer.getDisplayName()).color(DARK_PURPLE);
+        deathMessage
+                .append(" was killed by player ")
+                .color(DARK_GRAY)
+                .append(killerPlayer.getDisplayName())
+                .color(DARK_PURPLE)
+                .append("")
+                .color(DARK_GRAY);
 
         if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
             Entity damager = ((EntityDamageByEntityEvent) deadEntity.getLastDamageCause()).getDamager();
@@ -283,7 +289,16 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             }
 
         } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByBlockEvent) {
-            deathMessage.append(" (How the heck did you do this? Event (block): " + ((EntityDamageByBlockEvent) deadEntity.getLastDamageCause()).getDamager().getType() + ")").color(DARK_RED);
+            EntityDamageByBlockEvent cause = ((EntityDamageByBlockEvent) deadEntity.getLastDamageCause());
+            if (cause.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                deathMessage
+                        .append(" by pushing it into")
+                        .append(" the VOID").color(BLACK).bold(true)
+                        .append("").reset().color(DARK_GRAY);
+            } else {
+                deathMessage.append(" (How the heck did you do this? Event (block): " +
+                        "Cause:" + cause + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
+            }
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.MAGIC) {
             // Might be an Arrow of Harming (I / II). Either we assume that here, or we ignore it
