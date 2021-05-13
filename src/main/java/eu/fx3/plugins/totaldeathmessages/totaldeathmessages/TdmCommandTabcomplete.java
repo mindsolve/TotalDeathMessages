@@ -18,34 +18,9 @@ public class TdmCommandTabcomplete implements TabCompleter {
         if (args.length <= 1) {
             completions.add("status");
             completions.add("all");
-            completions.add("killspree");
-        } else if (args.length == 2) {
-
-            switch (args[0]) {
-                case "status":
-                    return completions;
-
-                case "all":
-                    if (MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
-                        completions.add("disable");
-                    } else {
-                        completions.add("enable");
-                    }
-
-                    break;
-                case "killspree":
-                case "killingspree":
-                    if (MobdeathConfig.getPlayerConfig(player.getUniqueId(), "allKillSpreeMessages")) {
-                        completions.add("disable");
-                    } else {
-                        completions.add("enable");
-                    }
-
-                    break;
-            }
-
+            completions.add("fewer");
+            completions.add("off");
         }
-
 
         return completions;
     }

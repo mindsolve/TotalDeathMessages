@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.*;
+
 // TODO: JavaDoc this file
 // TODO: Rewrite KillSpree end message
-// TODO: Make config run-dynamic (non-final)
 
 public class KillingspreeMessageTask extends BukkitRunnable {
     private final JavaPlugin plugin;
@@ -27,7 +28,7 @@ public class KillingspreeMessageTask extends BukkitRunnable {
 
     @Override
     public void run() {
-        int killSpreeTimeout = ((TotalDeathMessages)plugin).getPluginConfig().getInt("killing-spree-timeout");
+        int killSpreeTimeout = ((TotalDeathMessages) plugin).getPluginConfig().getInt("killing-spree-timeout");
         List<Player> playerList = getPlayersForReducedKillSpreeMessages();
         TextComponent.Builder chatMessage = Component.text();
 
@@ -61,7 +62,7 @@ public class KillingspreeMessageTask extends BukkitRunnable {
     private List<Player> getPlayersForReducedKillSpreeMessages() {
         List<Player> playerlist = new ArrayList<>();
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (MobdeathConfig.getPlayerConfig(player.getUniqueId(), "allKillSpreeMessages")) {
+            if (MobdeathConfig.getPlayerMessageSetting(player.getUniqueId()) != FEWER_MESSAGES) {
                 continue;
             }
             playerlist.add(player);

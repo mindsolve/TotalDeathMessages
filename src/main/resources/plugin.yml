@@ -6,7 +6,7 @@ authors: [ MindSolvinator ]
 description: Shows death messages for configurable mobs (reverse of normal behaviour)
 commands:
   tdm:
-    description: Enables or disables mob death messages (from this plugin)
-    usage: "Usage: /<command> [ status | enable | disable ]"
+    description: Enables, disables or reduces mob death messages (from this plugin)
+    usage: "Usage: /<command> [ status | all | fewer | off ]"
     aliases:
       - mobdeath

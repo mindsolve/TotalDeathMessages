@@ -1,5 +1,6 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
+import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
 import eu.fx3.plugins.totaldeathmessages.utils.TextComponentHelper;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Instant;
 import java.util.List;
 
+import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.*;
 import static net.md_5.bungee.api.ChatColor.*;
 
 
@@ -318,14 +320,14 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         TotalDeathMessages.getInstance().getLogger().info(BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerMessageSetting playerMessageSetting = MobdeathConfig.getPlayerMessageSetting(player.getUniqueId());
             // Only send messages to players that want them
-            if (!MobdeathConfig.playerWantsAllMessages(player.getUniqueId())) {
+            if (playerMessageSetting == NO_MESSAGES) {
                 continue;
             }
 
-            if (!MobdeathConfig.getPlayerConfig(player.getUniqueId(), "allKillSpreeMessages") &&
-                    currentKillStat.spreeKillCount > 2) {
-
+            // Skip players not wanting killing spree messages
+            if ((playerMessageSetting == FEWER_MESSAGES) && (currentKillStat.spreeKillCount > 2)) {
                 continue;
             }
 
