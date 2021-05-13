@@ -22,8 +22,6 @@ Three states:
  */
 
 public class TdmCommand implements CommandExecutor {
-    static TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
-
     // This method is called when somebody uses our command
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
