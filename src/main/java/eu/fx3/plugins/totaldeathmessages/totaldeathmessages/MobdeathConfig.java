@@ -27,7 +27,6 @@ public class MobdeathConfig {
         Object messageSetting = getUserSection(playerUUID).getOrSetDefault("message-setting", PlayerMessageSetting.ALL_MESSAGES);
         //noinspection ConstantConditions
         if (messageSetting instanceof String) {
-            pluginInstance.getLogger().warning("[config] returned string, not enum");
             messageSetting = PlayerMessageSetting.valueOf((String) messageSetting);
         }
         return (PlayerMessageSetting) messageSetting;
