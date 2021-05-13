@@ -19,7 +19,7 @@ public final class TotalDeathMessages extends JavaPlugin {
     private TridentLaunchHelper tridentLaunchHelper;
 
     // TODO: Cleanup list (offline players)
-    public HashMap<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
+    public final HashMap<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
 
     @Override
     public void onEnable() {

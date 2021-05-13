@@ -10,8 +10,8 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 public class ProjectileLaunchListener implements org.bukkit.event.Listener {
-    TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
-    TridentLaunchHelper tridentLaunchHelper = pluginInstance.getTridentLaunchHelper();
+    final TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
+    final TridentLaunchHelper tridentLaunchHelper = pluginInstance.getTridentLaunchHelper();
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
@@ -34,10 +34,8 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener {
             return;
         }
 
-        boolean isInOffhand = false;
-        isInOffhand = throwerEquipment.getItemInOffHand().getType() == Material.TRIDENT;
-        boolean isInMainhand = false;
-        isInMainhand = throwerEquipment.getItemInMainHand().getType() == Material.TRIDENT;
+        boolean isInOffhand = throwerEquipment.getItemInOffHand().getType() == Material.TRIDENT;
+        boolean isInMainhand = throwerEquipment.getItemInMainHand().getType() == Material.TRIDENT;
 
         ItemStack killerWeapon = null;
 

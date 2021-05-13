@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public class TridentLaunchHelper {
 
-    public HashMap<UUID, ItemStack> tridentLaunchesNew = new HashMap<>();
+    public final HashMap<UUID, ItemStack> tridentLaunchesNew = new HashMap<>();
 
     public void registerTridentLaunch(UUID playerUUID, ItemStack launchedTrident) {
         // Put launch in HashMap, overwriting previous launch (if applicable)
