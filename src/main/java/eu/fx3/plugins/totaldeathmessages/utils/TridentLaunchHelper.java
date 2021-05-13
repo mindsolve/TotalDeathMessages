@@ -1,13 +1,11 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
-
-// TODO: Add JavaDoc
+package eu.fx3.plugins.totaldeathmessages.utils;
 
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.UUID;
 
-public class TDMGlobalSettings {
+public class TridentLaunchHelper {
 
     public HashMap<UUID, ItemStack> tridentLaunchesNew = new HashMap<>();
 
@@ -19,5 +17,5 @@ public class TDMGlobalSettings {
     public ItemStack getLastThrownTrident(UUID playerUUID) {
         return tridentLaunchesNew.get(playerUUID);
     }
-}
 
+}

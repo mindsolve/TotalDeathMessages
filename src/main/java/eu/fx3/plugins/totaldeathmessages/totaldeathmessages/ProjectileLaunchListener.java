@@ -1,5 +1,6 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
+import eu.fx3.plugins.totaldeathmessages.utils.TridentLaunchHelper;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -8,9 +9,9 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
-public class ProjectileLaunchListener implements org.bukkit.event.Listener{
+public class ProjectileLaunchListener implements org.bukkit.event.Listener {
     TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
-    TDMGlobalSettings globalSettings = pluginInstance.getGlobalSettings();
+    TridentLaunchHelper tridentLaunchHelper = pluginInstance.getTridentLaunchHelper();
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
@@ -28,7 +29,7 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener{
         Player tridentThrower = (Player) event.getEntity().getShooter();
         // Get Throwers equipment
         EntityEquipment throwerEquipment = tridentThrower.getEquipment();
-        
+
         if (throwerEquipment == null) {
             return;
         }
@@ -45,7 +46,7 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener{
         } else if (isInMainhand) {
             killerWeapon = throwerEquipment.getItemInMainHand();
         }
-        
-        globalSettings.registerTridentLaunch(tridentThrower.getUniqueId(), killerWeapon);
+
+        tridentLaunchHelper.registerTridentLaunch(tridentThrower.getUniqueId(), killerWeapon);
     }
 }

@@ -3,6 +3,7 @@ package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 
+import eu.fx3.plugins.totaldeathmessages.utils.TridentLaunchHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,8 +16,7 @@ import java.util.UUID;
 public final class TotalDeathMessages extends JavaPlugin {
     private Yaml config;
     private static TotalDeathMessages instance;
-
-    private TDMGlobalSettings globalSettings;
+    private TridentLaunchHelper tridentLaunchHelper;
 
     // TODO: Cleanup list (offline players)
     public HashMap<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
@@ -26,8 +26,8 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Save object reference
         instance = this;
 
-        // Create TDMGlobalSettings object
-        globalSettings = new TDMGlobalSettings();
+        // Create TridentLaunchHelper object
+        tridentLaunchHelper = new TridentLaunchHelper();
 
         // Copy default config if it doesn't exist
         File configFile = new File(getDataFolder(), "config.yml");
@@ -72,17 +72,12 @@ public final class TotalDeathMessages extends JavaPlugin {
 
     }
 
-    protected void updateConfig() {
-        getLogger().info("Configuration reloaded.");
-        reloadConfig();
-    }
-
     public static TotalDeathMessages getInstance() {
         return instance;
     }
 
-    public TDMGlobalSettings getGlobalSettings() {
-        return this.globalSettings;
+    public TridentLaunchHelper getTridentLaunchHelper() {
+        return this.tridentLaunchHelper;
     }
 
     @NotNull

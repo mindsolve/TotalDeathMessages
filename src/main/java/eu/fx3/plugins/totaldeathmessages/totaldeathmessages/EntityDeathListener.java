@@ -2,6 +2,7 @@ package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
 import eu.fx3.plugins.totaldeathmessages.utils.TextComponentHelper;
+import eu.fx3.plugins.totaldeathmessages.utils.TridentLaunchHelper;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.WordUtils;
@@ -38,7 +39,7 @@ import static net.md_5.bungee.api.ChatColor.*;
 public class EntityDeathListener implements org.bukkit.event.Listener {
     TotalDeathMessages instance = TotalDeathMessages.getInstance();
     JavaPlugin plugin = instance;
-    TDMGlobalSettings globalSettings = instance.getGlobalSettings();
+    TridentLaunchHelper tridentLaunchHelper = instance.getTridentLaunchHelper();
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
@@ -365,7 +366,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
     }
 
     private void getTridentMessage(Player killerPlayer, ComponentBuilder deathMessage) {
-        ItemStack killerTrident = globalSettings.getLastThrownTrident(killerPlayer.getUniqueId());
+        ItemStack killerTrident = tridentLaunchHelper.getLastThrownTrident(killerPlayer.getUniqueId());
 
         if (killerTrident != null) {
             deathMessage.append(" with his ");
