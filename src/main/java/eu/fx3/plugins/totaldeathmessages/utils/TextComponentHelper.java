@@ -57,7 +57,7 @@ public class TextComponentHelper {
 
         } else {
             hoverEvent = Component.text("Yes, really, his bare hands!").asHoverEvent();
-            message = Component.text(" bare hands");
+            message = Component.text("bare hands");
         }
 
         return message

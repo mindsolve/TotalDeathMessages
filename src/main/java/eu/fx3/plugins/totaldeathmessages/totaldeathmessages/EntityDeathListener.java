@@ -171,7 +171,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     ItemStack killerWeapon = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
 
                     if (killerWeapon != null) {
-                        deathMessage.append("with his ").color(DARK_GRAY);
+                        deathMessage.append(" with his ").color(DARK_GRAY);
                         deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
                     }
 
@@ -192,8 +192,9 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
                     assert potionMeta != null;
                     if (potionMeta.getBasePotionData().getType().equals(PotionType.INSTANT_DAMAGE)) {
-                        deathMessage.append("Potion of ").color(DARK_GRAY).append("Harming " +
-                                (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I")).color(AQUA);
+                        deathMessage
+                                .append("Potion of Harming " + (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I"))
+                                .color(AQUA);
                     } else {
                         // This should not be possible, except (maybe) for cheating a whithering potion
                         deathMessage.append(TextComponentHelper.itemToTextComponent(item));
@@ -319,7 +320,9 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             deathMessage.append(" (killing spree x" + currentKillStat.spreeKillCount + ")!!").color(RED);
         }
 
-        deathMessage.append("!");
+        deathMessage
+                .append("").reset().color(DARK_GRAY)
+                .append("!");
 
         TotalDeathMessages.getInstance().getLogger().info(BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
