@@ -1,6 +1,6 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
-import eu.fx3.plugins.totaldeathmessages.utils.TridentLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -11,12 +11,13 @@ import org.bukkit.inventory.ItemStack;
 
 public class ProjectileLaunchListener implements org.bukkit.event.Listener {
     final TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
-    final TridentLaunchHelper tridentLaunchHelper = pluginInstance.getTridentLaunchHelper();
+    final ProjectileLaunchHelper projectileLaunchHelper = pluginInstance.getTridentLaunchHelper();
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         // Filter for Tridents
-        if (event.getEntity().getType() != EntityType.TRIDENT) {
+        if (!(event.getEntity().getType() == EntityType.TRIDENT ||
+                event.getEntity().getType() == EntityType.ARROW)) {
             return;
         }
 
@@ -26,25 +27,33 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener {
         }
 
         // Get Thrower
-        Player tridentThrower = (Player) event.getEntity().getShooter();
+        Player projectileLauncher = (Player) event.getEntity().getShooter();
         // Get Throwers equipment
-        EntityEquipment throwerEquipment = tridentThrower.getEquipment();
+        EntityEquipment launcherEquipment = projectileLauncher.getEquipment();
 
-        if (throwerEquipment == null) {
+        if (launcherEquipment == null) {
             return;
         }
 
-        boolean isInOffhand = throwerEquipment.getItemInOffHand().getType() == Material.TRIDENT;
-        boolean isInMainhand = throwerEquipment.getItemInMainHand().getType() == Material.TRIDENT;
+        // TODO: Simplify if-statement
+        boolean isInOffhand, isInMainhand;
+        if (event.getEntity().getType() == EntityType.TRIDENT) {
+            isInOffhand = launcherEquipment.getItemInOffHand().getType() == Material.TRIDENT;
+            isInMainhand = launcherEquipment.getItemInMainHand().getType() == Material.TRIDENT;
+        } else {
+            // Could be "BOW" or "CROSSBOW"
+            isInOffhand = launcherEquipment.getItemInOffHand().getType().name().contains("BOW");
+            isInMainhand = launcherEquipment.getItemInMainHand().getType().name().contains("BOW");
+        }
 
         ItemStack killerWeapon = null;
 
         if (isInOffhand && !isInMainhand) {
-            killerWeapon = throwerEquipment.getItemInOffHand();
+            killerWeapon = launcherEquipment.getItemInOffHand();
         } else if (isInMainhand) {
-            killerWeapon = throwerEquipment.getItemInMainHand();
+            killerWeapon = launcherEquipment.getItemInMainHand();
         }
 
-        tridentLaunchHelper.registerTridentLaunch(tridentThrower.getUniqueId(), killerWeapon);
+        projectileLaunchHelper.registerProjectileLauch(projectileLauncher.getUniqueId(), killerWeapon);
     }
 }

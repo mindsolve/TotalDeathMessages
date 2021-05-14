@@ -2,7 +2,7 @@ package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
 import eu.fx3.plugins.totaldeathmessages.utils.TextComponentHelper;
-import eu.fx3.plugins.totaldeathmessages.utils.TridentLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.WordUtils;
@@ -39,7 +39,7 @@ import static net.md_5.bungee.api.ChatColor.*;
 public class EntityDeathListener implements org.bukkit.event.Listener {
     final TotalDeathMessages instance = TotalDeathMessages.getInstance();
     final JavaPlugin plugin = instance;
-    final TridentLaunchHelper tridentLaunchHelper = instance.getTridentLaunchHelper();
+    final ProjectileLaunchHelper projectileLaunchHelper = instance.getTridentLaunchHelper();
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
@@ -183,7 +183,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         }
 
                         if (killerWeapon != null) {
-                            deathMessage.append(" with his ").color(DARK_GRAY);
+                            deathMessage.append("with his ").color(DARK_GRAY);
                             deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
                         }
                     }
@@ -381,7 +381,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
     }
 
     private void getTridentMessage(Player killerPlayer, ComponentBuilder deathMessage) {
-        ItemStack killerTrident = tridentLaunchHelper.getLastThrownTrident(killerPlayer.getUniqueId());
+        ItemStack killerTrident = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
 
         if (killerTrident != null) {
             deathMessage.append(" with his ");

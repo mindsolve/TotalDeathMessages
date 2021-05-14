@@ -3,7 +3,7 @@ package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 
-import eu.fx3.plugins.totaldeathmessages.utils.TridentLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public final class TotalDeathMessages extends JavaPlugin {
     private Yaml config;
     private static TotalDeathMessages instance;
-    private TridentLaunchHelper tridentLaunchHelper;
+    private ProjectileLaunchHelper projectileLaunchHelper;
 
     // TODO: Cleanup list (offline players)
     public final HashMap<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
@@ -27,7 +27,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         instance = this;
 
         // Create TridentLaunchHelper object
-        tridentLaunchHelper = new TridentLaunchHelper();
+        projectileLaunchHelper = new ProjectileLaunchHelper();
 
         // Copy default config if it doesn't exist
         File configFile = new File(getDataFolder(), "config.yml");
@@ -76,8 +76,8 @@ public final class TotalDeathMessages extends JavaPlugin {
         return instance;
     }
 
-    public TridentLaunchHelper getTridentLaunchHelper() {
-        return this.tridentLaunchHelper;
+    public ProjectileLaunchHelper getTridentLaunchHelper() {
+        return this.projectileLaunchHelper;
     }
 
     @NotNull
