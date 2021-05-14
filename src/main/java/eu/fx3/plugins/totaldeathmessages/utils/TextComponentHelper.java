@@ -6,6 +6,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.WordUtils;
@@ -41,7 +42,9 @@ public class TextComponentHelper {
             }
 
             if (meta.hasDisplayName()) {
-                name = itemName + " \"" + meta.getDisplayName() + "\"";
+                Component displayName = meta.displayName();
+                assert displayName != null;
+                name = itemName + " \"" + PlainComponentSerializer.plain().serialize(displayName) + "\"";
             } else {
                 name = itemName;
             }
