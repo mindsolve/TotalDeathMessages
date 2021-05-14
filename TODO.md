@@ -22,8 +22,18 @@
   - Code Readability
   - Maintainability
 - **Priority**: high
----
 
+### Remove BungeeCord chat components
+- **Object**: *everywhere*
+- **Description**:
+  - BungeeCord chat system was deprecated in Paper and replaced by Adventure
+- **Solution**:
+  - Replace all BungeeCord chat component usages with Adventure
+- **Impact**:
+  - Maintainability
+- **Priority**: medium
+
+---
 ### Template
 
 - **Object**: `com.example.test`
