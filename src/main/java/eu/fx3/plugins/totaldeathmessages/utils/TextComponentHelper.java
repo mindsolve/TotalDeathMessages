@@ -1,18 +1,20 @@
 package eu.fx3.plugins.totaldeathmessages.utils;
 
 
+import eu.fx3.plugins.totaldeathmessages.totaldeathmessages.TotalDeathMessages;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
-
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 
 public class TextComponentHelper {
@@ -25,44 +27,44 @@ public class TextComponentHelper {
      * @return BaseComponent representation of the item (name + item on hover)
      */
     public static Component itemToComponent(ItemStack itemStack) {
-        HoverEvent<?> event;
-        String message;
+        HoverEvent<?> hoverEvent;
+        @NonNull TextComponent message;
         TextColor messageColor = NamedTextColor.BLUE;
 
-
         if (itemStack != null && !itemStack.getType().equals(Material.AIR)) {
-            event = itemStack.asHoverEvent();
+            TotalDeathMessages.getInstance().getLogger().info("item: " + itemStack.serialize());
+
+            hoverEvent = itemStack.asHoverEvent();
             ItemMeta meta = itemStack.getItemMeta();
-            String name;
 
             String itemName = WordUtils.capitalize(itemStack.getType().name().toLowerCase().replaceAll("_", " "));
 
             if (itemStack.getType() == Material.TRIDENT) {
-                itemName = "giant derpy fork";
+                itemName = "giant fork";
             }
+
+            message = Component.text(itemName);
 
             if (meta.hasDisplayName()) {
                 Component displayName = meta.displayName();
                 assert displayName != null;
-                name = itemName + " \"" + PlainComponentSerializer.plain().serialize(displayName) + "\"";
-            } else {
-                name = itemName;
+
+                message = message.append(Component.text(" \"" + PlainComponentSerializer.plain().serialize(displayName) + "\""));
             }
 
             boolean isEnchanted = meta.getEnchants().keySet().size() > 0;
-
-            if (isEnchanted) messageColor = NamedTextColor.AQUA;
-            message = name;
+            if (isEnchanted) {
+                messageColor = NamedTextColor.AQUA;
+            }
 
         } else {
-            event = Component.text("Yes, really, his bare hands!").asHoverEvent();
-            message = " bare hands";
+            hoverEvent = Component.text("Yes, really, his bare hands!").asHoverEvent();
+            message = Component.text(" bare hands");
         }
 
-        return Component
-                .text(message)
+        return message
                 .color(messageColor)
-                .hoverEvent(event);
+                .hoverEvent(hoverEvent);
     }
 
     /**
@@ -79,7 +81,6 @@ public class TextComponentHelper {
      */
     @Deprecated
     public static BaseComponent itemToTextComponent(ItemStack itemStack) {
-
         Component itemComponent = itemToComponent(itemStack);
 
         BaseComponent[] result = BungeeComponentSerializer.get().serialize(itemComponent);
