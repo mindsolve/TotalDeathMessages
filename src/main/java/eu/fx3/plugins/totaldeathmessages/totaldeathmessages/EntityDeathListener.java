@@ -166,26 +166,13 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
                     // TODO:
                     //  Nothing gets displayed ("by shooting ") if:
-                    //  - The killer switches between Bow and other slot (e.g. Sword)
                     //  - The killer has no bow (ricocheted arrow)
 
-                    if (killerPlayer.getEquipment() != null) {
-                        ItemStack killerWeapon = null;
+                    ItemStack killerWeapon = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
 
-                        // Could be "BOW" or "CROSSBOW"
-                        boolean bowInOffhand = killerPlayer.getEquipment().getItemInOffHand().getType().name().contains("BOW");
-                        boolean bowInMainhand = killerPlayer.getEquipment().getItemInMainHand().getType().name().contains("BOW");
-
-                        if (bowInOffhand && !bowInMainhand) {
-                            killerWeapon = killerPlayer.getEquipment().getItemInOffHand();
-                        } else if (bowInOffhand || bowInMainhand) {
-                            killerWeapon = killerPlayer.getEquipment().getItemInMainHand();
-                        }
-
-                        if (killerWeapon != null) {
-                            deathMessage.append("with his ").color(DARK_GRAY);
-                            deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
-                        }
+                    if (killerWeapon != null) {
+                        deathMessage.append("with his ").color(DARK_GRAY);
+                        deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
                     }
 
                 } else if (damager instanceof ThrowableProjectile) {
@@ -253,7 +240,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             } else if (damager instanceof LightningStrike) {
                 deathMessage.append(" by summoning a ").color(DARK_GRAY).append("Lightning Bolt").color(AQUA).append("").color(DARK_GRAY);
 
-                getTridentMessage(killerPlayer, deathMessage);
+                getProjectileMessage(killerPlayer, deathMessage);
 
             } else if (damager instanceof AreaEffectCloud) {
                 AreaEffectCloud areaEffectCloudDamager = (AreaEffectCloud) damager;
@@ -380,7 +367,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         return currentKillStat;
     }
 
-    private void getTridentMessage(Player killerPlayer, ComponentBuilder deathMessage) {
+    private void getProjectileMessage(Player killerPlayer, ComponentBuilder deathMessage) {
         ItemStack killerTrident = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
 
         if (killerTrident != null) {
