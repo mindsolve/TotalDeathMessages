@@ -1,8 +1,12 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
-import eu.fx3.plugins.totaldeathmessages.utils.TextComponentHelper;
 import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.utils.TextComponentHelper;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.WordUtils;
@@ -27,7 +31,8 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Instant;
 import java.util.List;
 
-import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.*;
+import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.FEWER_MESSAGES;
+import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.NO_MESSAGES;
 import static net.md_5.bungee.api.ChatColor.*;
 
 
@@ -133,7 +138,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         // Add info for pets (owner), if applicable
         if (deadEntity instanceof Tameable) {
-            deathMessage.append(getPetTextComponent((Tameable) deadEntity).create());
+            deathMessage.append(getPetTextComponent((Tameable) deadEntity));
         }
 
         deathMessage
@@ -397,27 +402,34 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
 
     /**
-     * Generates a ComponentBuilder with details about a tamed entity, e.g. a tamed dog.
+     * Generates a BaseComponent[] with details about a tamed entity, e.g. a tamed dog.
      *
      * @param deadEntity The killed tameable entity
-     * @return A ComponentBuilder with a pet specific message, if the entitiy is tamed & owned
+     * @return A BaseComponent[] with a pet specific message, if the entitiy is tamed & owned
      */
     @NotNull
-    private ComponentBuilder getPetTextComponent(Tameable deadEntity) {
-        @NotNull ComponentBuilder result = new ComponentBuilder("").color(DARK_GRAY);
+    private BaseComponent[] getPetTextComponent(Tameable deadEntity) {
+        @NotNull TextComponent newResult = Component.text("");
 
         Player killerPlayer = deadEntity.getKiller();
 
-        if (deadEntity.isTamed() && deadEntity.getOwner() != null && killerPlayer != null) {
-            AnimalTamer deadEntityOwner = deadEntity.getOwner();
-            if (killerPlayer.getName().equals(deadEntityOwner.getName())) {
-                result.append(", the killer's pet,").color(DARK_GRAY);
+        if (deadEntity.isTamed() && deadEntity.getOwnerUniqueId() != null && killerPlayer != null) {
+            newResult = Component.text(", ", NamedTextColor.DARK_GRAY);
+
+            if (killerPlayer.getUniqueId().equals(deadEntity.getOwnerUniqueId())) {
+                newResult = newResult
+                        .append(Component.text("the killer's pet,", NamedTextColor.DARK_GRAY));
             } else {
-                result.append(", ").append(deadEntityOwner.getName()).color(DARK_PURPLE).append("'s pet,").color(DARK_GRAY);
+                AnimalTamer deadEntityOwner = deadEntity.getOwner();
+                assert deadEntityOwner != null && deadEntityOwner.getName() != null;
+
+                newResult = newResult
+                        .append(Component.text(deadEntityOwner.getName(), NamedTextColor.DARK_PURPLE))
+                        .append(Component.text("'s pet,", NamedTextColor.DARK_GRAY));
             }
         }
 
-        return result;
+        return BungeeComponentSerializer.get().serialize(newResult);
     }
 
 }
