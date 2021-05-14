@@ -32,8 +32,6 @@ public class TextComponentHelper {
         TextColor messageColor = NamedTextColor.BLUE;
 
         if (itemStack != null && !itemStack.getType().equals(Material.AIR)) {
-            TotalDeathMessages.getInstance().getLogger().info("item: " + itemStack.serialize());
-
             hoverEvent = itemStack.asHoverEvent();
             ItemMeta meta = itemStack.getItemMeta();
 
