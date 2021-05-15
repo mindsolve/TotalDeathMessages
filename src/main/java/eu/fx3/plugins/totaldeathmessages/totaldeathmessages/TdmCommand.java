@@ -1,6 +1,9 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -8,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.*;
-import static net.md_5.bungee.api.ChatColor.*;
 
 // TODO: Better descriptions for settings
 // TODO: Better visual representation
@@ -35,55 +37,69 @@ public class TdmCommand implements CommandExecutor {
             return false;
         }
 
-        ComponentBuilder commandResponse = new ComponentBuilder();
+        TextComponent.Builder newCommandResponse = Component.text();
         switch (args[0]) {
             case "status":
-                commandResponse.append("Total Death Messages:\n").underlined(true);
-                commandResponse.append("Showing: ").underlined(false);
+                newCommandResponse
+                        .append(Component.text("Total Death Messages:\n").decorate(TextDecoration.UNDERLINED))
+                        .append(Component.text("Showing: "));
 
                 if (MobdeathConfig.getPlayerMessageSetting(player.getUniqueId()) == ALL_MESSAGES) {
-                    commandResponse.append("All messages").bold(true).color(GREEN);
-                    commandResponse.append("\n").reset();
-                    commandResponse.append("Showing all messages, including killing sprees.");
+                    newCommandResponse
+                            .append(Component.text("All messages").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD))
+                            .append(Component.text("\nShowing all messages, including killing sprees."));
+
                 } else if (MobdeathConfig.getPlayerMessageSetting(player.getUniqueId()) == FEWER_MESSAGES) {
-                    commandResponse.append("Fewer messages").bold(true).color(YELLOW);
-                    commandResponse.append("\n").reset();
-                    commandResponse.append("Showing fewer messages and only summarized killing sprees.");
+                    newCommandResponse
+                            .append(Component.text("Fewer messages").color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD))
+                            .append(Component.text("\nShowing fewer messages and only summarized killing sprees."));
+
                 } else {
-                    commandResponse.append("No messages").bold(true).color(RED);
-                    commandResponse.append("\n").reset();
-                    commandResponse.append("Showing no mob death or killing spree messages.");
+                    newCommandResponse
+                            .append(Component.text("No messages").color(NamedTextColor.RED).decorate(TextDecoration.BOLD))
+                            .append(Component.text("\nShowing no mob death or killing spree messages."));
+
                 }
                 break;
 
             case "all":
                 MobdeathConfig.setPlayerMessageSetting(player.getUniqueId(), ALL_MESSAGES);
-                commandResponse.append("Enabled all mob death messages!").color(GREEN);
+                newCommandResponse
+                        .append(Component.text("Enabled all mob death messages!")
+                                .color(NamedTextColor.GREEN));
+
                 break;
 
             case "fewer":
             case "summarized":
                 MobdeathConfig.setPlayerMessageSetting(player.getUniqueId(), FEWER_MESSAGES);
-                commandResponse.append("Enabled reduced mob death message count.").color(GREEN)
-                        .append("\n").reset()
-                        .append("You will still receive single mob death messages, but no killing spree spam anymore.");
+                newCommandResponse
+                        .append(Component.text("Enabled reduced mob death message count.")
+                                .color(NamedTextColor.GREEN))
+                        .append(Component.text("\nYou will still receive single mob death messages, but no killing spree spam anymore."));
+
                 break;
 
             case "off":
             case "none":
                 MobdeathConfig.setPlayerMessageSetting(player.getUniqueId(), NO_MESSAGES);
-                commandResponse.append("Disabled mob death messages.").color(YELLOW)
-                        .append("\n").reset()
-                        .append("You will no longer receive mob death messages.");
+                newCommandResponse
+                        .append(Component.text("Disabled mob death messages.")
+                                .color(NamedTextColor.YELLOW))
+                        .append(Component.text("\nYou will no longer receive mob death messages."));
+
                 break;
 
             default:
-                commandResponse.append("Error:").color(RED).bold(true).append("Unknown subcommand \"" + args[0] + "\"!").bold(false);
-                sender.spigot().sendMessage(commandResponse.create());
+                newCommandResponse
+                        .append(Component.text("Error: ").color(NamedTextColor.RED).decorate(TextDecoration.BOLD))
+                        .append(Component.text("Unknown subcommand \"" + args[0] + "\"!").color(NamedTextColor.RED));
+
+                sender.sendMessage(newCommandResponse);
                 return false;
         }
 
-        sender.spigot().sendMessage(commandResponse.create());
+        sender.sendMessage(newCommandResponse);
         return true;
     }
 
