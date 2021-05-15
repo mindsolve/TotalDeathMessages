@@ -1,7 +1,6 @@
 package eu.fx3.plugins.totaldeathmessages.utils;
 
 
-import eu.fx3.plugins.totaldeathmessages.totaldeathmessages.TotalDeathMessages;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;

@@ -7,6 +7,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.lang.WordUtils;
@@ -144,7 +145,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         deathMessage
                 .append(" was killed by player ")
                 .color(DARK_GRAY)
-                .append(killerPlayer.getDisplayName())
+                .append(PlainComponentSerializer.plain().serialize(killerPlayer.displayName()))
                 .color(DARK_PURPLE)
                 .append("")
                 .color(DARK_GRAY);
