@@ -43,8 +43,8 @@ import static net.md_5.bungee.api.ChatColor.*;
 
 
 public class EntityDeathListener implements org.bukkit.event.Listener {
-    final TotalDeathMessages instance = TotalDeathMessages.getInstance();
-    final JavaPlugin plugin = instance;
+    static final TotalDeathMessages instance = TotalDeathMessages.getInstance();
+    static final JavaPlugin plugin = instance;
     final ProjectileLaunchHelper projectileLaunchHelper = instance.getTridentLaunchHelper();
 
     @EventHandler
