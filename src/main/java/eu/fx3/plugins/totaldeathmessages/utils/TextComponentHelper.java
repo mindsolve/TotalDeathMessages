@@ -17,6 +17,12 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 
 
 public class TextComponentHelper {
+    /**
+     * Private constructor; static utility classes should not be instantiated.
+     */
+    private TextComponentHelper() {
+        throw new IllegalStateException("This class should not be instantiated.");
+    }
 
     /**
      * Helper method to convert a ItemStack to a chat representation, containing its name, item type
