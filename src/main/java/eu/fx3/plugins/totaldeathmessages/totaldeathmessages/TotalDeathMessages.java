@@ -69,7 +69,9 @@ public final class TotalDeathMessages extends JavaPlugin {
 
     @Override
     public void onDisable() {
-
+        instance = null;
+        projectileLaunchHelper = null;
+        getLogger().info("Disabled plugin.");
     }
 
     public static TotalDeathMessages getInstance() {
