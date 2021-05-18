@@ -73,7 +73,6 @@
                             <destFileName>${project.artifactId}.jar</destFileName>
                         </artifactItem>
                     </artifactItems>
-                    <!--<outputDirectory>${project.build.directory}/wars</outputDirectory>-->
                     <overWriteReleases>false</overWriteReleases>
                     <overWriteSnapshots>true</overWriteSnapshots>
                 </configuration>
