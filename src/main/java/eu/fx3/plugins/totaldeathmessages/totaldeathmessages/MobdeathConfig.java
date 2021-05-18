@@ -15,10 +15,12 @@ public class MobdeathConfig {
      */
     public static final int CONFIG_VERSION = 3;
 
-    // Reference to main plugin class
+    /** Reference to main plugin class */
     static final TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
-    // Reference to global config
+    /** Reference to plugin-global config */
     static final Yaml config = pluginInstance.getPluginConfig();
+    /** Config section key with player configuration */
+    public static final String PLAYERCONFIG_KEY = "playerconfig";
 
     /**
      * Private constuctor; static utility classes should not be instantiated.
@@ -44,7 +46,7 @@ public class MobdeathConfig {
     }
 
     static FlatFileSection getUserSection(UUID playerUUID) {
-        String sectionPath = "playerconfig." + playerUUID;
+        String sectionPath = PLAYERCONFIG_KEY + "." + playerUUID;
 
         return config.getSection(sectionPath);
     }
@@ -62,8 +64,8 @@ public class MobdeathConfig {
 
                     // Save all data in hashmap
                     HashMap<String, PlayerMessageSetting> stateMap = new HashMap<>();
-                    for (String playerUUIDString : config.getSection("playerconfig").singleLayerKeySet()) {
-                        FlatFileSection playerSection = config.getSection("playerconfig." + playerUUIDString);
+                    for (String playerUUIDString : config.getSection(PLAYERCONFIG_KEY).singleLayerKeySet()) {
+                        FlatFileSection playerSection = config.getSection(PLAYERCONFIG_KEY + "." + playerUUIDString);
                         boolean wantsAllMessages = playerSection.getOrDefault("allMessages", true);
                         boolean wantsKillSpreeMessages = playerSection.getOrDefault("allKillSpreeMessages", true);
 
@@ -78,11 +80,11 @@ public class MobdeathConfig {
                     }
 
                     // Remove old config section
-                    config.remove("playerconfig");
+                    config.remove(PLAYERCONFIG_KEY);
 
                     // Write new config section
                     for (String playerUUIDstr : stateMap.keySet()) {
-                        config.set("playerconfig." + playerUUIDstr + ".message-setting", stateMap.get(playerUUIDstr));
+                        config.set(PLAYERCONFIG_KEY + "." + playerUUIDstr + ".message-setting", stateMap.get(playerUUIDstr));
                     }
 
                     config.set("config-version", 3);
