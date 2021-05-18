@@ -21,6 +21,13 @@ public class MobdeathConfig {
     static final Yaml config = pluginInstance.getPluginConfig();
 
     /**
+     * Private constuctor; static utility classes should not be instantiated.
+     */
+    private MobdeathConfig() {
+        throw new IllegalStateException("This class should not be instantiated.");
+    }
+
+    /**
      * TODO: Remove hacky workaround for enum conversion
      */
     static PlayerMessageSetting getPlayerMessageSetting(UUID playerUUID) {
