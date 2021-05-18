@@ -60,7 +60,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(), this);
 
         // Start KillingSpree Timer to fire every 5 seconds
-        new KillingspreeMessageTask(this).runTaskTimer(this, 25 * 5, 25 * 5);
+        new KillingspreeMessageTask(this).runTaskTimer(this, (long) 25 * 5, (long) 25 * 5);
 
         // Log success
         getLogger().info(ChatColor.GREEN + "Plugin successfully initialized!");
