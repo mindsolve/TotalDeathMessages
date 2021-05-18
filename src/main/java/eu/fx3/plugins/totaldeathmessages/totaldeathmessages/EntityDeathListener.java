@@ -330,7 +330,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 .append("").reset().color(DARK_GRAY)
                 .append("!");
 
-        TotalDeathMessages.getInstance().getLogger().info(BaseComponent.toLegacyText(deathMessage.create()));
+        TotalDeathMessages.getInstance().getLogger().info(() -> BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerMessageSetting playerMessageSetting = MobdeathConfig.getPlayerMessageSetting(player.getUniqueId());
             // Only send messages to players that want them
