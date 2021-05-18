@@ -5,6 +5,7 @@ import de.leonhard.storage.sections.FlatFileSection;
 import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -83,8 +84,8 @@ public class MobdeathConfig {
                     config.remove(PLAYERCONFIG_KEY);
 
                     // Write new config section
-                    for (String playerUUIDstr : stateMap.keySet()) {
-                        config.set(PLAYERCONFIG_KEY + "." + playerUUIDstr + ".message-setting", stateMap.get(playerUUIDstr));
+                    for (Map.Entry<String, PlayerMessageSetting> entry : stateMap.entrySet()) {
+                        config.set(PLAYERCONFIG_KEY + "." + entry.getKey() + ".message-setting", entry.getValue());
                     }
 
                     config.set("config-version", 3);
