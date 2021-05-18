@@ -34,7 +34,7 @@ public class TextComponentHelper {
             hoverEvent = itemStack.asHoverEvent();
             ItemMeta meta = itemStack.getItemMeta();
 
-            String itemName = WordUtils.capitalize(itemStack.getType().name().toLowerCase().replaceAll("_", " "));
+            String itemName = WordUtils.capitalize(itemStack.getType().name().toLowerCase().replace("_", " "));
 
             if (itemStack.getType() == Material.TRIDENT) {
                 itemName = "giant fork";

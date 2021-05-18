@@ -265,7 +265,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     PotionType areaEffectCloudDamagerType = areaEffectCloudDamager.getBasePotionData().getType();
                     // Make the effect type human-readable
                     String areaEffectCloudDamagerTypeName = WordUtils.capitalizeFully(
-                            areaEffectCloudDamagerType.name().replaceAll("_", " "));
+                            areaEffectCloudDamagerType.name().replace("_", " "));
 
                     // Add effect level, if upgradeable
                     if (areaEffectCloudDamagerType.isUpgradeable()) {
