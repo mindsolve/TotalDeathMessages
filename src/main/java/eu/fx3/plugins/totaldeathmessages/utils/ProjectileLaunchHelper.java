@@ -3,11 +3,12 @@ package eu.fx3.plugins.totaldeathmessages.utils;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class ProjectileLaunchHelper {
 
-    public final HashMap<UUID, ItemStack> projectileLaunches = new HashMap<>();
+    public final Map<UUID, ItemStack> projectileLaunches = new HashMap<>();
 
     public void registerProjectileLauch(UUID playerUUID, ItemStack projectileLauncher) {
         // Put launch in HashMap, overwriting previous launch (if applicable)

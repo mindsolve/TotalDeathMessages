@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public final class TotalDeathMessages extends JavaPlugin {
@@ -19,7 +20,7 @@ public final class TotalDeathMessages extends JavaPlugin {
     private ProjectileLaunchHelper projectileLaunchHelper;
 
     // TODO: Cleanup list (offline players)
-    public final HashMap<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
+    public final Map<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
 
     @Override
     public void onEnable() {
