@@ -37,9 +37,6 @@ import static net.md_5.bungee.api.ChatColor.*;
 
 
 // TODO: JavaDoc file
-// TODO: Add player UUID to PlayerKillStats
-// TODO: Move player id from name to UUID for PlayerKillStats
-
 
 public class EntityDeathListener implements org.bukkit.event.Listener {
     private final TotalDeathMessages instance;
