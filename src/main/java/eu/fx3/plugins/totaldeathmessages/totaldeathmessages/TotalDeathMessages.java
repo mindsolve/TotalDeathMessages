@@ -57,7 +57,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Register EventListener for EntityDeathEvent
         getServer().getPluginManager().registerEvents(new EntityDeathListener(this, projectileLaunchHelper), this);
         // Register EventListener for ProjectileLaunchEvent
-        getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(), this);
+        getServer().getPluginManager().registerEvents(new ProjectileLaunchListener(projectileLaunchHelper), this);
 
         // Start KillingSpree Timer to fire every 5 seconds
         new KillingspreeMessageTask(this).runTaskTimer(this, (long) 25 * 5, (long) 25 * 5);

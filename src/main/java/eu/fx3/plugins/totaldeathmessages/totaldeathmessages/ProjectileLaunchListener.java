@@ -10,8 +10,11 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 public class ProjectileLaunchListener implements org.bukkit.event.Listener {
-    final TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
-    final ProjectileLaunchHelper projectileLaunchHelper = pluginInstance.getTridentLaunchHelper();
+    private final ProjectileLaunchHelper projectileLaunchHelper;
+
+    public ProjectileLaunchListener(ProjectileLaunchHelper projectileLaunchHelper) {
+        this.projectileLaunchHelper = projectileLaunchHelper;
+    }
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
