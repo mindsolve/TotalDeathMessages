@@ -10,3 +10,6 @@
 /uiDesigner.xml
 
 /libraries/
+
+# Sonarlint
+/sonarlint/
