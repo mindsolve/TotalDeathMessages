@@ -2,6 +2,7 @@ package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.sections.FlatFileSection;
+
 import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
 
 import java.util.HashMap;
@@ -22,6 +23,8 @@ public class MobdeathConfig {
     static final Yaml config = pluginInstance.getPluginConfig();
     /** Config section key with player configuration */
     public static final String PLAYERCONFIG_KEY = "playerconfig";
+    /** Config key for single player message setting under playerconfig setting */
+    public static final String PLAYER_MESSAGE_SETTING_KEY = "message-setting";
 
     /**
      * Private constuctor; static utility classes should not be instantiated.
@@ -30,20 +33,19 @@ public class MobdeathConfig {
         throw new IllegalStateException("This class should not be instantiated.");
     }
 
-    /**
-     * TODO: Remove hacky workaround for enum conversion
-     */
     static PlayerMessageSetting getPlayerMessageSetting(UUID playerUUID) {
-        Object messageSetting = getUserSection(playerUUID).getOrSetDefault("message-setting", PlayerMessageSetting.ALL_MESSAGES);
-        //noinspection ConstantConditions
-        if (messageSetting instanceof String) {
-            messageSetting = PlayerMessageSetting.valueOf((String) messageSetting);
+        PlayerMessageSetting messageSetting = getUserSection(playerUUID).getEnum(PLAYER_MESSAGE_SETTING_KEY, PlayerMessageSetting.class);
+
+        if (messageSetting == null) {
+            messageSetting = PlayerMessageSetting.ALL_MESSAGES;
+            getUserSection(playerUUID).set(PLAYER_MESSAGE_SETTING_KEY, messageSetting);
         }
-        return (PlayerMessageSetting) messageSetting;
+
+        return messageSetting;
     }
 
     static void setPlayerMessageSetting(UUID playerUUID, PlayerMessageSetting value) {
-        getUserSection(playerUUID).set("message-setting", value);
+        getUserSection(playerUUID).set(PLAYER_MESSAGE_SETTING_KEY, value);
     }
 
     static FlatFileSection getUserSection(UUID playerUUID) {
