@@ -24,7 +24,6 @@ import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,9 +42,13 @@ import static net.md_5.bungee.api.ChatColor.*;
 
 
 public class EntityDeathListener implements org.bukkit.event.Listener {
-    static final TotalDeathMessages instance = TotalDeathMessages.getInstance();
-    static final JavaPlugin plugin = instance;
-    final ProjectileLaunchHelper projectileLaunchHelper = instance.getTridentLaunchHelper();
+    private final TotalDeathMessages instance;
+    private final ProjectileLaunchHelper projectileLaunchHelper;
+
+    public EntityDeathListener(TotalDeathMessages instance, ProjectileLaunchHelper projectileLaunchHelper) {
+        this.instance = instance;
+        this.projectileLaunchHelper = projectileLaunchHelper;
+    }
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
@@ -73,7 +76,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         return;
                     }
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("The world type \"" + worldType + "\" is invalid. Ignoring entry.");
+                    instance.getLogger().warning("The world type \"" + worldType + "\" is invalid. Ignoring entry.");
                 }
             }
         }
@@ -90,7 +93,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         return;
                     }
                 } catch (IllegalArgumentException e) {
-                    plugin.getLogger().warning("The entity type \"" + entityName + "\" is invalid. Ignoring entry.");
+                    instance.getLogger().warning("The entity type \"" + entityName + "\" is invalid. Ignoring entry.");
                 }
             }
         }
@@ -330,7 +333,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 .append("").reset().color(DARK_GRAY)
                 .append("!");
 
-        TotalDeathMessages.getInstance().getLogger().info(() -> BaseComponent.toLegacyText(deathMessage.create()));
+        instance.getLogger().info(() -> BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerMessageSetting playerMessageSetting = MobdeathConfig.getPlayerMessageSetting(player.getUniqueId());
             // Only send messages to players that want them
