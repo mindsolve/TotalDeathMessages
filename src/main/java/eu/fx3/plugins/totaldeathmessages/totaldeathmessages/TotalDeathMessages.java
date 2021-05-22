@@ -79,10 +79,6 @@ public final class TotalDeathMessages extends JavaPlugin {
         return instance;
     }
 
-    public ProjectileLaunchHelper getTridentLaunchHelper() {
-        return this.projectileLaunchHelper;
-    }
-
     @NotNull
     public Yaml getPluginConfig() {
         return config;
