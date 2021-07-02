@@ -281,6 +281,9 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
                 deathMessage.append(" by letting his " + damagerType + " loose");
 
+            } else if (damager instanceof Creeper) {
+                deathMessage.append(" by letting a creeper blow up");
+
             } else {
                 deathMessage.append(" Other damager! Name: " + damager.getName() + "; " + damager.getType()).color(RED);
 
