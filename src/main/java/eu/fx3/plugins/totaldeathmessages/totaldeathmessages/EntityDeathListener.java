@@ -277,6 +277,11 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                             .append(areaEffectCloudDamagerTypeName).color(AQUA);
                 }
 
+            } else if (damager instanceof Tameable && ((Tameable) damager).isTamed()) {
+                String damagerType = WordUtils.capitalizeFully(damager.getType().toString().replace("_", " "));
+
+                deathMessage.append(" by letting his " + damagerType + " loose");
+
             } else {
                 deathMessage.append(" Other damager! Name: " + damager.getName() + "; " + damager.getType()).color(RED);
 
