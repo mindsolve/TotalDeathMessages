@@ -156,19 +156,16 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             if (damager instanceof Projectile) {
                 deathMessage.append(" ").color(DARK_GRAY);
 
-                if (damager instanceof Arrow) {
-                    Arrow arrowDamager = (Arrow) damager;
+                if (damager instanceof Arrow || damager instanceof SpectralArrow) {
+                    AbstractArrow abstractArrow = (AbstractArrow) damager;
+                    ItemStack arrowItemStack = abstractArrow.getItemStack();
 
-                    deathMessage.append("by shooting");
+                    // Prepare article for arrow name
+                    String article = "a" + (arrowItemStack.getType().toString().matches("^[AEIOU].*") ? "n " : " ");
 
-                    if (arrowDamager.getBasePotionData().getType() != PotionType.UNCRAFTABLE && arrowDamager.getCustomEffects().isEmpty()) {
-                        ItemStack killerArrow = new ItemStack(Material.TIPPED_ARROW);
-                        PotionMeta meta = (PotionMeta) killerArrow.getItemMeta();
-                        meta.setBasePotionData(arrowDamager.getBasePotionData());
-                        killerArrow.setItemMeta(meta);
-                        deathMessage.append(" a ");
-                        deathMessage.append(TextComponentHelper.itemToTextComponent(killerArrow));
-                    }
+                    deathMessage.append("by shooting " + article);
+
+                    deathMessage.append(TextComponentHelper.itemToTextComponent(arrowItemStack));
 
                     // TODO:
                     //  Nothing gets displayed ("by shooting ") if:

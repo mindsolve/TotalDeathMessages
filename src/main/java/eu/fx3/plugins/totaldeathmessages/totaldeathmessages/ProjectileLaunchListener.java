@@ -20,7 +20,8 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener {
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
         // Filter for Tridents
         if (!(event.getEntity().getType() == EntityType.TRIDENT ||
-                event.getEntity().getType() == EntityType.ARROW)) {
+                event.getEntity().getType() == EntityType.ARROW ||
+                event.getEntity().getType() == EntityType.SPECTRAL_ARROW)) {
             return;
         }
 
