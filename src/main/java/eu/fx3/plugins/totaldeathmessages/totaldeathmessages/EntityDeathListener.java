@@ -159,14 +159,14 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 if (damager instanceof Arrow) {
                     Arrow arrowDamager = (Arrow) damager;
 
-                    deathMessage.append("by shooting ");
+                    deathMessage.append("by shooting");
 
                     if (arrowDamager.getBasePotionData().getType() != PotionType.UNCRAFTABLE && arrowDamager.getCustomEffects().isEmpty()) {
                         ItemStack killerArrow = new ItemStack(Material.TIPPED_ARROW);
                         PotionMeta meta = (PotionMeta) killerArrow.getItemMeta();
                         meta.setBasePotionData(arrowDamager.getBasePotionData());
                         killerArrow.setItemMeta(meta);
-                        deathMessage.append("a ");
+                        deathMessage.append(" a ");
                         deathMessage.append(TextComponentHelper.itemToTextComponent(killerArrow));
                     }
 
