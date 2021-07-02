@@ -40,6 +40,7 @@ public class TextComponentHelper {
             hoverEvent = itemStack.asHoverEvent();
             ItemMeta meta = itemStack.getItemMeta();
 
+            // TODO: Check if itemStack.getI18NDisplayName(); can be used here
             String itemName = WordUtils.capitalize(itemStack.getType().name().toLowerCase().replace("_", " "));
 
             if (itemStack.getType() == Material.TRIDENT) {
@@ -55,7 +56,7 @@ public class TextComponentHelper {
                 message = message.append(Component.text(" \"" + PlainComponentSerializer.plain().serialize(displayName) + "\""));
             }
 
-            boolean isEnchanted = meta.getEnchants().keySet().size() > 0;
+            boolean isEnchanted = !meta.getEnchants().isEmpty();
             if (isEnchanted) {
                 messageColor = NamedTextColor.AQUA;
             }
