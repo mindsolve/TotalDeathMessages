@@ -202,6 +202,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         // This should not be possible, except (maybe) for cheating a whithering potion
                         deathMessage.append(TextComponentHelper.itemToTextComponent(item));
                     }
+                } else if (damager instanceof ShulkerBullet) {
+                    deathMessage.append("by redirecting a shulker bullet");
 
                 } else {
                     Projectile projectileDamager = (Projectile) damager;
