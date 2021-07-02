@@ -291,9 +291,19 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         .append(" by pushing it into")
                         .append(" the VOID").color(BLACK).bold(true)
                         .append("").reset().color(DARK_GRAY);
+            } else if (cause.getCause() == EntityDamageEvent.DamageCause.LAVA) {
+                deathMessage
+                        .append(" by pushing it into")
+                        .append(" Lava").color(RED).bold(true)
+                        .append("").reset().color(DARK_GRAY);
+            } else if (cause.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR) {
+                deathMessage
+                        .append(" by pushing it onto")
+                        .append(" a very hot floor").color(RED).bold(true)
+                        .append("").reset().color(DARK_GRAY);
             } else {
                 deathMessage.append(" (How the heck did you do this? Event (block): " +
-                        "Cause:" + cause + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
+                        "Cause:" + cause.getCause() + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
             }
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.MAGIC) {
