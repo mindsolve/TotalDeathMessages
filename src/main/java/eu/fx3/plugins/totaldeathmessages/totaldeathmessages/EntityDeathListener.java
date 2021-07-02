@@ -203,7 +203,10 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         deathMessage.append(TextComponentHelper.itemToTextComponent(item));
                     }
                 } else if (damager instanceof ShulkerBullet) {
-                    deathMessage.append("by redirecting a shulker bullet");
+                    deathMessage.append("by redirecting a Shulker Bullet");
+
+                } else if (damager instanceof Fireball) {
+                    deathMessage.append("by redirecting a Ghast Fireball");
 
                 } else {
                     Projectile projectileDamager = (Projectile) damager;
