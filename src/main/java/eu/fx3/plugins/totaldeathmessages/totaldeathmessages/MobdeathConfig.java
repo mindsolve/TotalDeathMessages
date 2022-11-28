@@ -1,7 +1,6 @@
 package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
 
 import de.leonhard.storage.Yaml;
-import de.leonhard.storage.internal.exceptions.LightningValidationException;
 import de.leonhard.storage.sections.FlatFileSection;
 
 import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
@@ -38,7 +37,7 @@ public class MobdeathConfig {
         PlayerMessageSetting messageSetting;
         try {
             messageSetting = getUserSection(playerUUID).getEnum(PLAYER_MESSAGE_SETTING_KEY, PlayerMessageSetting.class);
-        } catch (LightningValidationException e) {
+        } catch (Exception e) {
             messageSetting = PlayerMessageSetting.ALL_MESSAGES;
             getUserSection(playerUUID).set(PLAYER_MESSAGE_SETTING_KEY, messageSetting);
         }
