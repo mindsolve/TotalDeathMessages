@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="TotalDeathMessages" target="1.8" />
+      <module name="TotalDeathMessages" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
