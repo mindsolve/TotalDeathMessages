@@ -33,6 +33,15 @@
   - Maintainability
 - **Priority**: medium
 
+### Make messages gender-neutral
+- **Object**: *everywhere*
+- **Description**:
+  - Some messages are referencing the player as male
+- **Solution**:
+  - Replace all mentions with they
+- **Impact**:
+  - Inclusivity
+- **Priority**: medium
 ---
 ### Template
 
