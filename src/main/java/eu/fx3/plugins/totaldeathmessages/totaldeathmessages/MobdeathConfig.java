@@ -27,7 +27,7 @@ public class MobdeathConfig {
     public static final String PLAYER_MESSAGE_SETTING_KEY = "message-setting";
 
     /**
-     * Private constuctor; static utility classes should not be instantiated.
+     * Private constructor; static utility classes should not be instantiated.
      */
     private MobdeathConfig() {
         throw new IllegalStateException("This class should not be instantiated.");

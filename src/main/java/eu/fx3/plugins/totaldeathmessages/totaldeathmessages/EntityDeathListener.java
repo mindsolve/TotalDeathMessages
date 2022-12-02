@@ -409,7 +409,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
     /**
      * Checks whether the specified world is ignored or not.
      *
-     * @param eventWorldName Name of the world the event occured in
+     * @param eventWorldName Name of the world the event occurred in
      * @return True if the world is ignored; false otherwise.
      */
     private boolean isWorldIgnored(String eventWorldName) {
@@ -423,13 +423,13 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
 
     /**
-     * Generates a BaseComponent[] with details about a tamed entity, e.g. a tamed dog.
+     * Generates an Adventure TextComponent with details about a tamed entity, e.g. a tamed dog.
      *
-     * @param deadEntity The killed tameable entity
-     * @return A BaseComponent[] with a pet specific message, if the entitiy is tamed & owned
+     * @param deadEntity The killed tamable entity
+     * @return An Adventure TextComponent with a pet specific message, if the entity is tamed & owned
      */
     @NotNull
-    private BaseComponent[] getPetTextComponent(Tameable deadEntity) {
+    private TextComponent getModernPetTextComponent(Tameable deadEntity) {
         @NotNull TextComponent newResult = Component.text("");
 
         Player killerPlayer = deadEntity.getKiller();
