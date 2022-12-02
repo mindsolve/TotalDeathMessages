@@ -450,7 +450,21 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             }
         }
 
-        return BungeeComponentSerializer.get().serialize(newResult);
+        return newResult;
+    }
+
+    /**
+     * Generates a BaseComponent[] with details about a tamed entity, e.g. a tamed dog.
+     *
+     * @param deadEntity The killed tamable entity
+     * @return A BaseComponent[] with a pet specific message, if the entity is tamed & owned
+     * @deprecated Spigot text components are deprecated and their use should be removed
+     */
+    @NotNull
+    @Deprecated(since = "v1.7.2", forRemoval = true)
+    private BaseComponent[] getPetTextComponent(Tameable deadEntity) {
+        TextComponent modernComponentResult = getModernPetTextComponent(deadEntity);
+        return BungeeComponentSerializer.get().serialize(modernComponentResult);
     }
 
 }
