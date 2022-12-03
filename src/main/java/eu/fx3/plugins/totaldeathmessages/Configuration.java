@@ -3,14 +3,12 @@ package eu.fx3.plugins.totaldeathmessages;
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.sections.FlatFileSection;
 
-import eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 
-public class MobdeathConfig {
+public class Configuration {
     /**
      * This variable contains the current configuration version.
      * For each breaking change, this version is incremented
@@ -25,15 +23,17 @@ public class MobdeathConfig {
     public static final String PLAYERCONFIG_KEY = "playerconfig";
     /** Config key for single player message setting under playerconfig setting */
     public static final String PLAYER_MESSAGE_SETTING_KEY = "message-setting";
+    /** Config key for the config version setting */
+    public static final String CONFIG_VERSION_KEY = "config-version";
 
     /**
      * Private constructor; static utility classes should not be instantiated.
      */
-    private MobdeathConfig() {
+    private Configuration() {
         throw new IllegalStateException("This class should not be instantiated.");
     }
 
-    static PlayerMessageSetting getPlayerMessageSetting(UUID playerUUID) {
+    public static PlayerMessageSetting getPlayerMessageSetting(UUID playerUUID) {
         PlayerMessageSetting messageSetting;
         try {
             messageSetting = getUserSection(playerUUID).getEnum(PLAYER_MESSAGE_SETTING_KEY, PlayerMessageSetting.class);
@@ -58,13 +58,13 @@ public class MobdeathConfig {
     /**
      * Updates the plugin config file from a previous version, if needed
      *
-     * @param oldVersion The old plugin config version number
+     * @param currentVersion The current plugin config version number
      */
-    static void upgradeConfigVersion(int oldVersion) {
-        while (oldVersion != CONFIG_VERSION) {
-            switch (oldVersion) {
-                case 2:
-                    pluginInstance.getLogger().info("Migrating config from version 2...");
+    static void upgradeConfigVersion(int currentVersion) {
+        while (currentVersion != CONFIG_VERSION) {
+            switch (currentVersion) {
+                case 2 -> {
+                    pluginInstance.getLogger().info("Migrating config from version 2 to 3...");
 
                     // Save all data in hashmap
                     HashMap<String, PlayerMessageSetting> stateMap = new HashMap<>();
@@ -90,16 +90,23 @@ public class MobdeathConfig {
                     for (Map.Entry<String, PlayerMessageSetting> entry : stateMap.entrySet()) {
                         config.set(PLAYERCONFIG_KEY + "." + entry.getKey() + ".message-setting", entry.getValue());
                     }
-
-                    config.set("config-version", 3);
-
+                    config.set(CONFIG_VERSION_KEY, 3);
                     pluginInstance.getLogger().info("Config migration from 2 -> 3 finished.");
-                    oldVersion = config.getInt("config-version");
-                    break;
+                    currentVersion = config.getInt(CONFIG_VERSION_KEY);
+                }
 
-                default:
-                    throw new IllegalArgumentException("Unknown config version!");
+                case 3 -> {
+                    pluginInstance.getLogger().info("Migrating config from version 3 to 4...");
 
+                    // Changes 3->4: Added Debug option (bool)
+                    config.setDefault("debug", false);
+
+                    config.set(CONFIG_VERSION_KEY, 4);
+                    pluginInstance.getLogger().info("Config migration from 3 -> 4 finished.");
+                    currentVersion = config.getInt(CONFIG_VERSION_KEY);
+                }
+
+                default -> throw new IllegalArgumentException("Unknown config version!");
             }
         }
 

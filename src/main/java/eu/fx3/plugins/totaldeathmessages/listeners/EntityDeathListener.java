@@ -1,6 +1,6 @@
 package eu.fx3.plugins.totaldeathmessages.listeners;
 
-import eu.fx3.plugins.totaldeathmessages.MobdeathConfig;
+import eu.fx3.plugins.totaldeathmessages.Configuration;
 import eu.fx3.plugins.totaldeathmessages.PlayerKillStats;
 import eu.fx3.plugins.totaldeathmessages.TotalDeathMessages;
 import eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting;
@@ -355,7 +355,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         instance.getLogger().info(() -> BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerMessageSetting playerMessageSetting = MobdeathConfig.getPlayerMessageSetting(player.getUniqueId());
+            PlayerMessageSetting playerMessageSetting = Configuration.getPlayerMessageSetting(player.getUniqueId());
             // Only send messages to players that want them
             if (playerMessageSetting == NO_MESSAGES) {
                 continue;

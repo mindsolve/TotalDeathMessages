@@ -38,7 +38,7 @@ public class TdmCommand implements CommandExecutor {
 
         switch (args[0]) {
             case "status" -> {
-                PlayerMessageSetting setting = MobdeathConfig.getPlayerMessageSetting(player.getUniqueId());
+                PlayerMessageSetting setting = Configuration.getPlayerMessageSetting(player.getUniqueId());
 
                 commandResponse
                         .append("<u>Total Death Messages:</u>\n")
@@ -46,16 +46,16 @@ public class TdmCommand implements CommandExecutor {
                         .append("Showing %s.".formatted(setting.longDescription));
             }
             case "all" -> {
-                MobdeathConfig.setPlayerMessageSetting(player.getUniqueId(), ALL_MESSAGES);
+                Configuration.setPlayerMessageSetting(player.getUniqueId(), ALL_MESSAGES);
                 commandResponse.append("<green>Enabled all mob death messages!</green>");
             }
             case "fewer", "summarized" -> {
-                MobdeathConfig.setPlayerMessageSetting(player.getUniqueId(), FEWER_MESSAGES);
+                Configuration.setPlayerMessageSetting(player.getUniqueId(), FEWER_MESSAGES);
                 commandResponse.append("<green>Enabled reduced mob death message count.</green>\n")
                         .append("You will still receive single mob death messages, but no killing spree spam anymore.");
             }
             case "off", "none" -> {
-                MobdeathConfig.setPlayerMessageSetting(player.getUniqueId(), NO_MESSAGES);
+                Configuration.setPlayerMessageSetting(player.getUniqueId(), NO_MESSAGES);
                 commandResponse.append("<yellow>Disabled mob death messages.</yellow>\n")
                         .append("You will no longer receive mob death messages.\n" +
                                 "You can re-enable them anytime with <click:suggest_command:'/tdm all'><green>/tdm all</green></click> <i>(for all messages)</i> or <click:suggest_command:'/tdm fewer'><green>/tdm fewer</green></click> <i>(for summarized messages)</i>.");

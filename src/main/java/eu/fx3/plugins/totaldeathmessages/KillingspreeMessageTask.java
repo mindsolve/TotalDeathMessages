@@ -62,7 +62,7 @@ public class KillingspreeMessageTask extends BukkitRunnable {
     private List<Player> getPlayersForReducedKillSpreeMessages() {
         List<Player> playerlist = new ArrayList<>();
         for (Player player : plugin.getServer().getOnlinePlayers()) {
-            if (MobdeathConfig.getPlayerMessageSetting(player.getUniqueId()) != FEWER_MESSAGES) {
+            if (Configuration.getPlayerMessageSetting(player.getUniqueId()) != FEWER_MESSAGES) {
                 continue;
             }
             playerlist.add(player);
