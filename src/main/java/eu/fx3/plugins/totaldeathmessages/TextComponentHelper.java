@@ -1,4 +1,4 @@
-package eu.fx3.plugins.totaldeathmessages.utils;
+package eu.fx3.plugins.totaldeathmessages;
 
 
 import net.kyori.adventure.text.Component;
@@ -7,7 +7,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
@@ -53,7 +53,9 @@ public class TextComponentHelper {
                 Component displayName = meta.displayName();
                 assert displayName != null;
 
-                message = message.append(Component.text(" \"" + PlainComponentSerializer.plain().serialize(displayName) + "\""));
+
+
+                message = message.append(Component.text(" \"" + PlainTextComponentSerializer.plainText().serialize(displayName) + "\""));
             }
 
             boolean isEnchanted = !meta.getEnchants().isEmpty();

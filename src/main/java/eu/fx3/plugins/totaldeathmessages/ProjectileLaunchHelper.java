@@ -1,4 +1,4 @@
-package eu.fx3.plugins.totaldeathmessages.utils;
+package eu.fx3.plugins.totaldeathmessages;
 
 import org.bukkit.inventory.ItemStack;
 

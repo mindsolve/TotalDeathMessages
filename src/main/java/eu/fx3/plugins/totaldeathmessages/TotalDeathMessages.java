@@ -1,9 +1,11 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
+package eu.fx3.plugins.totaldeathmessages;
 
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 
-import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.listeners.EntityDeathListener;
+import eu.fx3.plugins.totaldeathmessages.listeners.ProjectileLaunchListener;
+import eu.fx3.plugins.totaldeathmessages.ProjectileLaunchHelper;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;

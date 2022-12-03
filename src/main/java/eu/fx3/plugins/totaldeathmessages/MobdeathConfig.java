@@ -1,9 +1,9 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
+package eu.fx3.plugins.totaldeathmessages;
 
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.sections.FlatFileSection;
 
-import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
+import eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting;
 
 import java.util.HashMap;
 import java.util.Map;

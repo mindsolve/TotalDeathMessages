@@ -1,6 +1,6 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
+package eu.fx3.plugins.totaldeathmessages.listeners;
 
-import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.ProjectileLaunchHelper;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
