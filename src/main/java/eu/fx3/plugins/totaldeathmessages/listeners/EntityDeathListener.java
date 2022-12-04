@@ -267,6 +267,12 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                             .append("Lingering Potion of ").color(DARK_GRAY)
                             .append("Harming "
                                     + (areaEffectCloudDamager.getBasePotionData().isUpgraded() ? "II" : "I")).color(AQUA);
+                } else if (areaEffectCloudDamager.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL)) {
+                    deathMessage
+                            .append(" by throwing a ")
+                            .append("Lingering Potion of ").color(DARK_GRAY)
+                            .append("Healing "
+                                    + (areaEffectCloudDamager.getBasePotionData().isUpgraded() ? "II" : "I")).color(AQUA);
                 } else {
                     // This should not be possible with Vanialla game
 
