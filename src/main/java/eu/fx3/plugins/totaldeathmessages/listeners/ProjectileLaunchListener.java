@@ -59,6 +59,6 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener {
             killerWeapon = launcherEquipment.getItemInMainHand();
         }
 
-        projectileLaunchHelper.registerProjectileLauch(projectileLauncher.getUniqueId(), killerWeapon);
+        projectileLaunchHelper.registerProjectileLaunch(projectileLauncher.getUniqueId(), killerWeapon);
     }
 }
