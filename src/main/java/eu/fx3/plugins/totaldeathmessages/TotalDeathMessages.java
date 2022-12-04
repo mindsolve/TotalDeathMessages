@@ -1,9 +1,10 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
+package eu.fx3.plugins.totaldeathmessages;
 
 import de.leonhard.storage.Yaml;
 import de.leonhard.storage.internal.settings.ConfigSettings;
 
-import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.listeners.EntityDeathListener;
+import eu.fx3.plugins.totaldeathmessages.listeners.ProjectileLaunchListener;
 import org.bukkit.ChatColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,7 +46,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         // Set config mode
         config.setConfigSettings(ConfigSettings.PRESERVE_COMMENTS);
 
-        MobdeathConfig.upgradeConfigVersion(config.getOrDefault("config-version", 1));
+        Configuration.upgradeConfigVersion(config.getOrDefault(Configuration.CONFIG_VERSION_KEY, 1));
 
         PluginCommand tdmCommand = this.getCommand("tdm");
         assert tdmCommand != null;

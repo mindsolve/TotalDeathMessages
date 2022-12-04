@@ -1,6 +1,6 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
+package eu.fx3.plugins.totaldeathmessages.listeners;
 
-import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.ProjectileLaunchHelper;
 import org.bukkit.Material;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -9,8 +9,11 @@ import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+
 public class ProjectileLaunchListener implements org.bukkit.event.Listener {
     private final ProjectileLaunchHelper projectileLaunchHelper;
+    private final EntityType[] wantedType = {EntityType.TRIDENT, EntityType.ARROW, EntityType.SPECTRAL_ARROW};
 
     public ProjectileLaunchListener(ProjectileLaunchHelper projectileLaunchHelper) {
         this.projectileLaunchHelper = projectileLaunchHelper;
@@ -18,20 +21,16 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener {
 
     @EventHandler
     public void onProjectileLaunch(ProjectileLaunchEvent event) {
-        // Filter for Tridents
-        if (!(event.getEntity().getType() == EntityType.TRIDENT ||
-                event.getEntity().getType() == EntityType.ARROW ||
-                event.getEntity().getType() == EntityType.SPECTRAL_ARROW)) {
+        // Filter for Projectiles
+        if (Arrays.stream(wantedType).noneMatch(type -> type == event.getEntity().getType())) {
             return;
         }
 
         // Filter for Players
-        if (!(event.getEntity().getShooter() instanceof Player)) {
+        if (!(event.getEntity().getShooter() instanceof Player projectileLauncher)) {
             return;
         }
 
-        // Get Thrower
-        Player projectileLauncher = (Player) event.getEntity().getShooter();
         // Get Throwers equipment
         EntityEquipment launcherEquipment = projectileLauncher.getEquipment();
 
@@ -40,11 +39,13 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener {
         }
 
         // TODO: Simplify if-statement
-        boolean isInOffhand, isInMainhand;
+        boolean isInOffhand;
+        boolean isInMainhand;
         if (event.getEntity().getType() == EntityType.TRIDENT) {
             isInOffhand = launcherEquipment.getItemInOffHand().getType() == Material.TRIDENT;
             isInMainhand = launcherEquipment.getItemInMainHand().getType() == Material.TRIDENT;
         } else {
+            // TODO: BOWL also contains BOW... Find a better (future-proof) way to detect the launcher
             // Could be "BOW" or "CROSSBOW"
             isInOffhand = launcherEquipment.getItemInOffHand().getType().name().contains("BOW");
             isInMainhand = launcherEquipment.getItemInMainHand().getType().name().contains("BOW");
@@ -58,6 +59,6 @@ public class ProjectileLaunchListener implements org.bukkit.event.Listener {
             killerWeapon = launcherEquipment.getItemInMainHand();
         }
 
-        projectileLaunchHelper.registerProjectileLauch(projectileLauncher.getUniqueId(), killerWeapon);
+        projectileLaunchHelper.registerProjectileLaunch(projectileLauncher.getUniqueId(), killerWeapon);
     }
 }

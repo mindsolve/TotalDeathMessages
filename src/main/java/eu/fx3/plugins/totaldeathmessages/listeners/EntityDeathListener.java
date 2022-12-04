@@ -1,16 +1,19 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
+package eu.fx3.plugins.totaldeathmessages.listeners;
 
-import eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting;
-import eu.fx3.plugins.totaldeathmessages.utils.ProjectileLaunchHelper;
-import eu.fx3.plugins.totaldeathmessages.utils.TextComponentHelper;
+import eu.fx3.plugins.totaldeathmessages.Configuration;
+import eu.fx3.plugins.totaldeathmessages.PlayerKillStats;
+import eu.fx3.plugins.totaldeathmessages.TotalDeathMessages;
+import eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting;
+import eu.fx3.plugins.totaldeathmessages.ProjectileLaunchHelper;
+import eu.fx3.plugins.totaldeathmessages.TextComponentHelper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.apache.commons.lang.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -31,8 +34,8 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Instant;
 import java.util.List;
 
-import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.FEWER_MESSAGES;
-import static eu.fx3.plugins.totaldeathmessages.settingutils.PlayerMessageSetting.NO_MESSAGES;
+import static eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting.FEWER_MESSAGES;
+import static eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting.NO_MESSAGES;
 import static net.md_5.bungee.api.ChatColor.*;
 
 
@@ -138,14 +141,14 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         }
 
         // Add info for pets (owner), if applicable
-        if (deadEntity instanceof Tameable) {
-            deathMessage.append(getPetTextComponent((Tameable) deadEntity));
+        if (deadEntity instanceof Tameable deadTamable) {
+            deathMessage.append(getPetTextComponent(deadTamable));
         }
 
         deathMessage
                 .append(" was killed by player ")
                 .color(DARK_GRAY)
-                .append(PlainComponentSerializer.plain().serialize(killerPlayer.displayName()))
+                .append(PlainTextComponentSerializer.plainText().serialize(killerPlayer.displayName()))
                 .color(DARK_PURPLE)
                 .append("")
                 .color(DARK_GRAY);
@@ -342,8 +345,8 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
 
         // Add "Killing Spree" info
-        if (currentKillStat.spreeKillCount > 1) {
-            deathMessage.append(" (killing spree x" + currentKillStat.spreeKillCount + ")!!").color(RED);
+        if (currentKillStat.getSpreeKillCount() > 1) {
+            deathMessage.append(" (killing spree x" + currentKillStat.getSpreeKillCount() + ")!!").color(RED);
         }
 
         deathMessage
@@ -352,14 +355,14 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
         instance.getLogger().info(() -> BaseComponent.toLegacyText(deathMessage.create()));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            PlayerMessageSetting playerMessageSetting = MobdeathConfig.getPlayerMessageSetting(player.getUniqueId());
+            PlayerMessageSetting playerMessageSetting = Configuration.getPlayerMessageSetting(player.getUniqueId());
             // Only send messages to players that want them
             if (playerMessageSetting == NO_MESSAGES) {
                 continue;
             }
 
             // Skip players not wanting killing spree messages
-            if ((playerMessageSetting == FEWER_MESSAGES) && (currentKillStat.spreeKillCount > 2)) {
+            if ((playerMessageSetting == FEWER_MESSAGES) && (currentKillStat.getSpreeKillCount() > 2)) {
                 continue;
             }
 
@@ -384,15 +387,15 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             currentKillStat = new PlayerKillStats();
         }
 
-        if (killTimestamp - currentKillStat.lastKillTime <= killSpreeTimeout) {
+        if (killTimestamp - currentKillStat.getLastKillTime() <= killSpreeTimeout) {
             // Killing spree
-            currentKillStat.spreeKillCount++;
+            currentKillStat.setSpreeKillCount(currentKillStat.getSpreeKillCount() + 1);
         } else {
-            currentKillStat.spreeKillCount = 1;
+            currentKillStat.setSpreeKillCount(1);
         }
 
-        currentKillStat.lastKillTime = killTimestamp;
-        currentKillStat.totalKillCount++;
+        currentKillStat.setLastKillTime(killTimestamp);
+        currentKillStat.setTotalKillCount(currentKillStat.getTotalKillCount() + 1);
         return currentKillStat;
     }
 

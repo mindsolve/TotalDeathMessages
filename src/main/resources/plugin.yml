@@ -1,7 +1,7 @@
-name: Total_Death_Messages
-version: ${project.version}
-main: eu.fx3.plugins.totaldeathmessages.totaldeathmessages.TotalDeathMessages
-api-version: "1.16"
+name: TotalDeathMessages
+version: '${version}'
+main: eu.fx3.plugins.totaldeathmessages.TotalDeathMessages
+api-version: 1.19
 authors: [ MindSolvinator ]
 description: Shows death messages for configurable mobs (reverse of normal behaviour)
 commands:
@@ -10,3 +10,5 @@ commands:
     usage: "Usage: /<command> [ status | all | fewer | off ]"
     aliases:
       - mobdeath
+libraries:
+  - org.apache.commons:commons-text:1.10.0

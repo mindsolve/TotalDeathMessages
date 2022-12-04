@@ -1,4 +1,4 @@
-package eu.fx3.plugins.totaldeathmessages.totaldeathmessages;
+package eu.fx3.plugins.totaldeathmessages;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
