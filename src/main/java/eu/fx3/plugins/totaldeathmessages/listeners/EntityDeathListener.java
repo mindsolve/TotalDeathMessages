@@ -181,12 +181,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
                     }
 
-                } else if (damager instanceof ThrowableProjectile) {
-                    ThrowableProjectile throwableDamager = (ThrowableProjectile) damager;
-                    deathMessage.append("by throwing his ");
-                    BaseComponent killerWeaponComponent = TextComponentHelper.itemToTextComponent(throwableDamager.getItem());
-                    deathMessage.append(killerWeaponComponent);
-
                 } else if (damager instanceof ThrownPotion) {
                     ThrownPotion potionDamager = (ThrownPotion) damager;
                     ItemMeta potionItemMeta = potionDamager.getItem().getItemMeta();
@@ -201,10 +195,20 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         deathMessage
                                 .append("Potion of Harming " + (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I"))
                                 .color(AQUA);
+                    } else if (potionMeta.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL)) {
+                        deathMessage
+                                .append("Potion of Healing " + (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I"))
+                                .color(AQUA);
                     } else {
                         // This should not be possible, except (maybe) for cheating a whithering potion
                         deathMessage.append(TextComponentHelper.itemToTextComponent(item));
                     }
+                } else if (damager instanceof ThrowableProjectile) {
+                    ThrowableProjectile throwableDamager = (ThrowableProjectile) damager;
+                    deathMessage.append("by throwing his ");
+                    BaseComponent killerWeaponComponent = TextComponentHelper.itemToTextComponent(throwableDamager.getItem());
+                    deathMessage.append(killerWeaponComponent);
+
                 } else if (damager instanceof ShulkerBullet) {
                     deathMessage.append("by redirecting a Shulker Bullet");
 
@@ -314,7 +318,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         .append("").reset().color(DARK_GRAY);
             } else {
                 deathMessage.append(" (How the heck did you do this? Event (block): " +
-                        "Cause:" + cause.getCause() + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
+                                    "Cause:" + cause.getCause() + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
             }
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.MAGIC) {
