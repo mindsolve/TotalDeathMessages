@@ -13,7 +13,7 @@ public class Configuration {
      * This variable contains the current configuration version.
      * For each breaking change, this version is incremented
      */
-    public static final int CONFIG_VERSION = 3;
+    public static final int CONFIG_VERSION = 4;
 
     /** Reference to main plugin class */
     static final TotalDeathMessages pluginInstance = TotalDeathMessages.getInstance();
