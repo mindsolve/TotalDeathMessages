@@ -181,8 +181,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
                     }
 
-                } else if (damager instanceof ThrownPotion) {
-                    ThrownPotion potionDamager = (ThrownPotion) damager;
+                } else if (damager instanceof ThrownPotion potionDamager) {
                     ItemMeta potionItemMeta = potionDamager.getItem().getItemMeta();
 
                     deathMessage.append("by throwing a ");
@@ -203,8 +202,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         // This should not be possible, except (maybe) for cheating a whithering potion
                         deathMessage.append(TextComponentHelper.itemToTextComponent(item));
                     }
-                } else if (damager instanceof ThrowableProjectile) {
-                    ThrowableProjectile throwableDamager = (ThrowableProjectile) damager;
+                } else if (damager instanceof ThrowableProjectile throwableDamager) {
                     deathMessage.append("by throwing his ");
                     BaseComponent killerWeaponComponent = TextComponentHelper.itemToTextComponent(throwableDamager.getItem());
                     deathMessage.append(killerWeaponComponent);
@@ -258,8 +256,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
                 getProjectileMessage(killerPlayer, deathMessage);
 
-            } else if (damager instanceof AreaEffectCloud) {
-                AreaEffectCloud areaEffectCloudDamager = (AreaEffectCloud) damager;
+            } else if (damager instanceof AreaEffectCloud areaEffectCloudDamager) {
 
                 if (areaEffectCloudDamager.getBasePotionData().getType().equals(PotionType.INSTANT_DAMAGE)) {
                     deathMessage
@@ -292,7 +289,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                             .append(areaEffectCloudDamagerTypeName).color(AQUA);
                 }
 
-            } else if (damager instanceof Tameable && ((Tameable) damager).isTamed()) {
+            } else if (damager instanceof Tameable tameable && tameable.isTamed()) {
                 String damagerType = WordUtils.capitalizeFully(damager.getType().toString().replace("_", " "));
 
                 deathMessage.append(" by letting his " + damagerType + " loose");
@@ -305,8 +302,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
             }
 
-        } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByBlockEvent) {
-            EntityDamageByBlockEvent cause = ((EntityDamageByBlockEvent) deadEntity.getLastDamageCause());
+        } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByBlockEvent cause) {
             if (cause.getCause() == EntityDamageEvent.DamageCause.VOID) {
                 deathMessage
                         .append(" by pushing it into")
@@ -338,7 +334,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     .append(")").reset().color(DARK_GRAY);
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
-            // If cause == FIRE_TICK && getKiller == Player, this is cased by Fire* on Playerweapon
+            // If cause == FIRE_TICK && getKiller == Player, this is caused by Fire* on Playerweapon
             // Fire_Tick = "Indirect Damage" (Burning)
             deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
 
