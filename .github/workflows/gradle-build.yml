@@ -28,13 +28,18 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - name: Build with Gradle
+      - name: Build and scan with Gradle
         uses: gradle/gradle-build-action@v2.3.3
         with:
           arguments: build --scan
 
+      - name: Build final shadowed jar with Gradle
+        uses: gradle/gradle-build-action@v2.3.3
+        with:
+          arguments: shadowJar --scan
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.1
         with:
-          path: build/libs/*.jar
+          path: build/libs/*-all.jar
           name: "Ready-to-use plugin jarfile"
