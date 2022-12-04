@@ -324,8 +324,10 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             }
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.MAGIC) {
-            // Might be an Arrow of Harming (I / II). Either we assume that here, or we ignore it
+            // Might be an Arrow of Harming (I / II) or Arrow of Healing (I/II) for undead.
+            // Either we assume that here, or we ignore it
             // (because we can't check: time of check vs time of arrow firing)
+            // TODO: Can this be covered by our ProjectileLaunchListener?
 
             deathMessage.append(" using ").color(DARK_GRAY)
                     .append("Magic").color(AQUA)
