@@ -5,7 +5,8 @@ import de.leonhard.storage.internal.settings.ConfigSettings;
 
 import eu.fx3.plugins.totaldeathmessages.listeners.EntityDeathListener;
 import eu.fx3.plugins.totaldeathmessages.listeners.ProjectileLaunchListener;
-import org.bukkit.ChatColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -66,8 +67,7 @@ public final class TotalDeathMessages extends JavaPlugin {
         new CleanupTask(this).runTaskTimer(this, (long) 25 * 60 * 5, (long) 25 * 60 * 5);
 
         // Log success
-        getLogger().info(ChatColor.GREEN + "Plugin successfully initialized!");
-
+        getComponentLogger().info(Component.text("Plugin successfully initialized!").color(NamedTextColor.GREEN));
     }
 
     @Override
