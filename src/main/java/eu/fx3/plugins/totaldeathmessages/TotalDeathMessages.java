@@ -20,7 +20,6 @@ public final class TotalDeathMessages extends JavaPlugin {
     private static TotalDeathMessages instance;
     private ProjectileLaunchHelper projectileLaunchHelper;
 
-    // TODO: Cleanup list (offline players)
     public final Map<UUID, PlayerKillStats> playerKillStats = new HashMap<>();
 
     @Override
@@ -63,6 +62,8 @@ public final class TotalDeathMessages extends JavaPlugin {
 
         // Start KillingSpree Timer to fire every 5 seconds
         new KillingspreeMessageTask(this).runTaskTimer(this, (long) 25 * 5, (long) 25 * 5);
+        // Start CleanupTask Timer to fire every 5 minutes
+        new CleanupTask(this).runTaskTimer(this, (long) 25 * 60 * 5, (long) 25 * 60 * 5);
 
         // Log success
         getLogger().info(ChatColor.GREEN + "Plugin successfully initialized!");

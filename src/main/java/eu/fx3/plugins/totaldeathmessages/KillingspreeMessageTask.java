@@ -19,7 +19,7 @@ import static eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting.*;
 // TODO: JavaDoc this file
 // TODO: Rewrite KillSpree end message
 
-public class KillingspreeMessageTask extends BukkitRunnable {
+class KillingspreeMessageTask extends BukkitRunnable {
     private final JavaPlugin plugin;
 
     public KillingspreeMessageTask(JavaPlugin plugin) {
