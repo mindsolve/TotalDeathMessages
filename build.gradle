@@ -38,7 +38,7 @@ dependencies {
 
     // Must be included, shadowed and relocated
     implementation 'com.github.simplix-softworks:simplixstorage:3.2.5'
-    implementation 'net.kyori:adventure-text-serializer-bungeecord:4.1.2'
+    implementation 'net.kyori:adventure-text-serializer-bungeecord:4.2.0'
 }
 
 def targetJavaVersion = 17
