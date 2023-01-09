@@ -39,7 +39,7 @@ jobs:
           arguments: shadowJar --scan
 
       - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v3.1.2
         with:
           path: build/libs/*-all.jar
           name: "Ready-to-use plugin jarfile"
