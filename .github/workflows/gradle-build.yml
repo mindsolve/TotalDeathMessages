@@ -29,12 +29,12 @@ jobs:
           java-version: 17
 
       - name: Build and scan with Gradle
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         with:
           arguments: build --scan
 
       - name: Build final shadowed jar with Gradle
-        uses: gradle/gradle-build-action@v2.3.3
+        uses: gradle/gradle-build-action@v2.4.0
         with:
           arguments: shadowJar --scan
 
