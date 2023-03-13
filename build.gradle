@@ -27,7 +27,7 @@ repositories {
 
 dependencies {
     // Only for development, not needed for runtime
-    compileOnly 'org.jetbrains:annotations:23.1.0'
+    compileOnly 'org.jetbrains:annotations:24.0.1'
 
     // Provided by PaperMC server itself
     shadow 'io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT'
