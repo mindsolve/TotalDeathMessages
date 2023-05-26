@@ -37,7 +37,7 @@ dependencies {
     compileOnly 'org.apache.commons:commons-text:1.10.0'
 
     // Must be included, shadowed and relocated
-    implementation 'com.github.simplix-softworks:simplixstorage:3.2.5'
+    implementation 'com.github.simplix-softworks:simplixstorage:3.2.6'
     implementation 'net.kyori:adventure-text-serializer-bungeecord:4.1.2'
 }
 
