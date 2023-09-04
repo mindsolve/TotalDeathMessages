@@ -12,7 +12,7 @@ jobs:
     # Since sonarqube requires a token, which is not available in GH Actions from forks, runs on PRs from forks are disabled here
     if: github.repository == 'mindsolve/TotalDeathMessages'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
