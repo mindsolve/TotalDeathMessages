@@ -3,6 +3,7 @@ plugins {
     id "xyz.jpenilla.run-paper" version "2.1.0"
     id "org.sonarqube" version "4.2.0.3129"
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'idea'
 }
 
 group = 'eu.fx3.plugins'
@@ -89,4 +90,10 @@ shadowJar {
 
     relocate 'net.kyori.adventure.text.serializer.bungeecord', mainPackage + '.shadow.adventure-bungeecord'
     relocate 'de.leonhard.storage', mainPackage + '.shadow.simplixstorage'
+}
+
+idea {
+    module {
+        downloadJavadoc = true
+    }
 }
