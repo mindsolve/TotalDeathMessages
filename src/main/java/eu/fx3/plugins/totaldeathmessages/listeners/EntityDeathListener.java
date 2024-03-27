@@ -10,10 +10,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.apache.commons.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -37,7 +34,6 @@ import java.util.List;
 
 import static eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting.FEWER_MESSAGES;
 import static eu.fx3.plugins.totaldeathmessages.PlayerMessageSetting.NO_MESSAGES;
-import static net.md_5.bungee.api.ChatColor.*;
 
 
 // TODO: JavaDoc file
@@ -228,7 +224,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     Projectile projectileDamager = (Projectile) damager;
 
                     textComponentBuilder
-                            .append(Component.text("using Projectile "))
+                            .append(Component.text("using a Projectile "))
                             .append(projectileDamager.name());
 
                     Component projectileDamagerCustomName = projectileDamager.customName();
@@ -438,11 +434,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         return currentKillStat;
     }
 
-    @Deprecated(forRemoval = true)
-    private void addLegacyProjectileMessage(Player killerPlayer, ComponentBuilder deathMessage) {
-        deathMessage.append(BungeeComponentSerializer.get().serialize(getProjectileMessage(killerPlayer)));
-    }
-
     private @NotNull TextComponent getProjectileMessage(Player killerPlayer) {
         TextComponent.Builder projectileMessage = Component.text();
         ItemStack killerProjectile = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
@@ -502,20 +493,6 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         }
 
         return newResult;
-    }
-
-    /**
-     * Generates a BaseComponent[] with details about a tamed entity, e.g. a tamed dog.
-     *
-     * @param deadEntity The killed tamable entity
-     * @return A BaseComponent[] with a pet specific message, if the entity is tamed & owned
-     * @deprecated Spigot text components are deprecated and their use should be removed
-     */
-    @NotNull
-    @Deprecated(since = "v1.7.2", forRemoval = true)
-    private BaseComponent[] getPetTextComponent(Tameable deadEntity) {
-        TextComponent modernComponentResult = getModernPetTextComponent(deadEntity);
-        return BungeeComponentSerializer.get().serialize(modernComponentResult);
     }
 
 }
