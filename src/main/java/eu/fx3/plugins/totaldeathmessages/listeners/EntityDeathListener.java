@@ -9,6 +9,7 @@ import eu.fx3.plugins.totaldeathmessages.TextComponentHelper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -126,42 +127,47 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
             $Entity was killed by $Player [using $extra]
          */
 
+        final TextComponent.Builder textComponentBuilder = Component.text()
+                .color(NamedTextColor.DARK_GRAY);
 
-        ComponentBuilder deathMessage = new ComponentBuilder().color(DARK_GRAY);
         if (!customName.isEmpty()) {
+            textComponentBuilder.append(customNameComponent.color(NamedTextColor.GOLD));
+
             // Get killed entity type (e.g. "Ender Dragon", "Bee")
             String killedEntityTypeName = deadEntity.getType().toString().replace("_", " ");
             killedEntityTypeName = WordUtils.capitalizeFully(killedEntityTypeName);
 
-            deathMessage.append(killedEntityName).color(GOLD);
-
             // Append entity type if the entity had a custom name (nametag)
-            deathMessage.append(" (that poor ").color(DARK_GRAY).append(killedEntityTypeName).color(BLUE).append(")").color(DARK_GRAY);
+            textComponentBuilder
+                    .append(Component.text(" (that poor ").color(NamedTextColor.DARK_GRAY))
+                    .append(Component.text(killedEntityTypeName).color(NamedTextColor.BLUE))
+                    .append(Component.text(")").color(NamedTextColor.DARK_GRAY));
+
         } else {
             // Attach correct article as the entity name is the entity type ("Ghast" -> "A Ghast"; "Enderman" -> "An Enderman")
             // Beware: This "algorithm" doesn't respect special cases ("a unit"/"an unit")
             String article = "A" + (killedEntityName.matches("^[AEIOU].*") ? "n " : " ");
-            deathMessage.append(article).color(DARK_GRAY).append(killedEntityName).color(BLUE);
+            textComponentBuilder
+                    .append(Component.text(article).color(NamedTextColor.DARK_GRAY))
+                    .append(Component.text(killedEntityName).color(NamedTextColor.BLUE));
         }
 
         // Add info for pets (owner), if applicable
         if (deadEntity instanceof Tameable deadTamable) {
-            deathMessage.append(getPetTextComponent(deadTamable));
+            textComponentBuilder.append(getModernPetTextComponent(deadTamable));
         }
 
-        deathMessage
-                .append(" was killed by player ")
-                .color(DARK_GRAY)
-                .append(PlainTextComponentSerializer.plainText().serialize(killerPlayer.displayName()))
-                .color(DARK_PURPLE)
-                .append("")
-                .color(DARK_GRAY);
+        textComponentBuilder
+                .append(Component.text(" was killed by player ").color(NamedTextColor.DARK_GRAY))
+                .append(killerPlayer.displayName().color(NamedTextColor.DARK_PURPLE))
+                .append(Component.text().color(NamedTextColor.DARK_GRAY));
 
-        if (deadEntity.getLastDamageCause() instanceof EntityDamageByEntityEvent) {
-            Entity damager = ((EntityDamageByEntityEvent) deadEntity.getLastDamageCause()).getDamager();
+        EntityDamageEvent lastDamageEvent = deadEntity.getLastDamageCause();
+        if (lastDamageEvent instanceof EntityDamageByEntityEvent) {
+            Entity damager = ((EntityDamageByEntityEvent) lastDamageEvent).getDamager();
 
             if (damager instanceof Projectile) {
-                deathMessage.append(" ").color(DARK_GRAY);
+                textComponentBuilder.append(Component.text(" "));
 
                 if (damager instanceof Arrow || damager instanceof SpectralArrow) {
                     AbstractArrow abstractArrow = (AbstractArrow) damager;
@@ -170,9 +176,9 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     // Prepare article for arrow name
                     String article = "a" + (arrowItemStack.getType().toString().matches("^[AEIOU].*") ? "n " : " ");
 
-                    deathMessage.append("by shooting " + article);
-
-                    deathMessage.append(TextComponentHelper.itemToTextComponent(arrowItemStack));
+                    textComponentBuilder
+                            .append(Component.text("by shooting " + article))
+                            .append(TextComponentHelper.itemToComponent(arrowItemStack));
 
                     // TODO:
                     //  Nothing gets displayed ("by shooting ") if:
@@ -181,59 +187,67 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                     ItemStack killerWeapon = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
 
                     if (killerWeapon != null) {
-                        deathMessage.append(" with his ").color(DARK_GRAY);
-                        deathMessage.append(TextComponentHelper.itemToTextComponent(killerWeapon));
+                        textComponentBuilder
+                                .append(Component.text(" with his ").color(NamedTextColor.DARK_GRAY))
+                                .append(TextComponentHelper.itemToComponent(killerWeapon));
                     }
 
                 } else if (damager instanceof ThrownPotion potionDamager) {
                     ItemMeta potionItemMeta = potionDamager.getItem().getItemMeta();
 
-                    deathMessage.append("by throwing a ");
+                    textComponentBuilder.append(Component.text("by throwing a "));
 
                     PotionMeta potionMeta = (PotionMeta) potionItemMeta;
                     ItemStack item = potionDamager.getItem();
 
                     assert potionMeta != null;
                     if (potionMeta.getBasePotionData().getType().equals(PotionType.INSTANT_DAMAGE)) {
-                        deathMessage
-                                .append("Potion of Harming " + (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I"))
-                                .color(AQUA);
+                        textComponentBuilder
+                                .append(Component.text("Potion of Harming " + (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I")).color(NamedTextColor.AQUA));
                     } else if (potionMeta.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL)) {
-                        deathMessage
-                                .append("Potion of Healing " + (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I"))
-                                .color(AQUA);
+                        textComponentBuilder
+                                .append(Component.text("Potion of Healing " + (potionMeta.getBasePotionData().isUpgraded() ? "II" : "I")).color(NamedTextColor.AQUA));
                     } else {
                         // This should not be possible, except (maybe) for cheating a whithering potion
-                        deathMessage.append(TextComponentHelper.itemToTextComponent(item));
+                        textComponentBuilder.append(TextComponentHelper.itemToComponent(item));
                     }
                 } else if (damager instanceof ThrowableProjectile throwableDamager) {
-                    deathMessage.append("by throwing his ");
-                    BaseComponent killerWeaponComponent = TextComponentHelper.itemToTextComponent(throwableDamager.getItem());
-                    deathMessage.append(killerWeaponComponent);
+                    textComponentBuilder
+                            .append(Component.text("by throwing his "))
+                            .append(TextComponentHelper.itemToComponent(throwableDamager.getItem()));
 
                 } else if (damager instanceof ShulkerBullet) {
-                    deathMessage.append("by redirecting a Shulker Bullet");
+                    textComponentBuilder
+                            .append(Component.text("by redirecting a Shulker Bullet"));
 
                 } else if (damager instanceof Fireball) {
-                    deathMessage.append("by redirecting a Ghast Fireball");
+                    textComponentBuilder
+                            .append(Component.text("by redirecting a Ghast Fireball"));
 
                 } else {
                     Projectile projectileDamager = (Projectile) damager;
 
-                    deathMessage.append("Projectile ");
-                    deathMessage.append(projectileDamager.getName());
-                    if (projectileDamager.getCustomName() != null) {
-                        deathMessage.append(" \"" + projectileDamager.getCustomName() + "\"");
+                    textComponentBuilder
+                            .append(Component.text("using Projectile "))
+                            .append(projectileDamager.name());
+
+                    Component projectileDamagerCustomName = projectileDamager.customName();
+                    if (projectileDamagerCustomName != null) {
+                        textComponentBuilder
+                                .append(Component.text(" \""))
+                                .append(projectileDamagerCustomName)
+                                .append(Component.text("\""));
                     }
                 }
 
-            } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.THORNS) {
+            } else if (lastDamageEvent.getCause() == EntityDamageEvent.DamageCause.THORNS) {
                 // Thorns
                 //TODO: Find better message
-                deathMessage.append(" by letting his armor do the job for him");
+                textComponentBuilder
+                        .append(Component.text(" by letting his armor do the job for him"));
 
             } else if (damager instanceof Player) {
-                // No killer weapon can be whielded in the offhand (left), except for bows.
+                // No killer weapon can be wielded in the offhand (left), except for bows.
                 // Bows should already be covered by Projectile -> Arrow
                 EntityEquipment killerEquipment = killerPlayer.getEquipment();
                 ItemStack killerWeapon = null;
@@ -242,130 +256,144 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 // itemToTextComponent is capable of handling "null" (bare hands)
                 if (killerEquipment != null) {
                     if (killerEquipment.getItemInMainHand().getType().name().contains("SWORD")) {
-                        deathMessage.append(" by slashing it with his ").color(DARK_GRAY);
+                        textComponentBuilder.append(Component.text(" by slashing it with his ").color(NamedTextColor.DARK_GRAY));
                     } else if (killerEquipment.getItemInMainHand().getType() == Material.TRIDENT) {
-                        deathMessage.append(" by stabbing it with his ").color(DARK_GRAY);
+                        textComponentBuilder.append(Component.text(" by stabbing it with his ").color(NamedTextColor.DARK_GRAY));
                     } else {
-                        deathMessage.append(" by hitting it repeatedly with his ").color(DARK_GRAY);
+                        textComponentBuilder.append(Component.text(" by hitting it repeatedly with his ").color(NamedTextColor.DARK_GRAY));
                     }
 
                     killerWeapon = killerEquipment.getItemInMainHand();
                 }
 
-                BaseComponent killerWeaponComponent = TextComponentHelper.itemToTextComponent(killerWeapon);
-                deathMessage.append(killerWeaponComponent);
+                textComponentBuilder.append(TextComponentHelper.itemToComponent(killerWeapon));
 
             } else if (damager instanceof LightningStrike) {
-                deathMessage.append(" by summoning a ").color(DARK_GRAY).append("Lightning Bolt").color(AQUA).append("").color(DARK_GRAY);
+                textComponentBuilder
+                        .append(Component.text(" by summoning a ").color(NamedTextColor.DARK_GRAY))
+                        .append(Component.text("Lightning Bolt").color(NamedTextColor.AQUA))
+                        .append(Component.text().color(NamedTextColor.DARK_GRAY))
+                        .append(getProjectileMessage(killerPlayer));
 
-                getProjectileMessage(killerPlayer, deathMessage);
 
             } else if (damager instanceof AreaEffectCloud areaEffectCloudDamager) {
 
-                if (areaEffectCloudDamager.getBasePotionData().getType().equals(PotionType.INSTANT_DAMAGE)) {
-                    deathMessage
-                            .append(" by throwing a ")
-                            .append("Lingering Potion of ").color(DARK_GRAY)
-                            .append("Harming "
-                                    + (areaEffectCloudDamager.getBasePotionData().isUpgraded() ? "II" : "I")).color(AQUA);
-                } else if (areaEffectCloudDamager.getBasePotionData().getType().equals(PotionType.INSTANT_HEAL)) {
-                    deathMessage
-                            .append(" by throwing a ")
-                            .append("Lingering Potion of ").color(DARK_GRAY)
-                            .append("Healing "
-                                    + (areaEffectCloudDamager.getBasePotionData().isUpgraded() ? "II" : "I")).color(AQUA);
-                } else {
-                    // This should not be possible with Vanialla game
+                PotionType potionType = areaEffectCloudDamager.getBasePotionData().getType();
+                textComponentBuilder
+                        .append(Component.text(" by throwing a "))
+                        .append(Component.text("Lingering Potion of ").color(NamedTextColor.DARK_GRAY));
 
-                    // Get the potion effect type
-                    PotionType areaEffectCloudDamagerType = areaEffectCloudDamager.getBasePotionData().getType();
+
+                if (potionType.equals(PotionType.INSTANT_DAMAGE)) {
+                    textComponentBuilder
+                            .append(Component.text("Harming ").color(NamedTextColor.AQUA));
+
+                } else if (potionType.equals(PotionType.INSTANT_HEAL)) {
+                    textComponentBuilder
+                            .append(Component.text("Healing ").color(NamedTextColor.AQUA));
+
+
+                } else {
+                    // This should not be possible with Vanilla game
+
                     // Make the effect type human-readable
                     String areaEffectCloudDamagerTypeName = WordUtils.capitalizeFully(
-                            areaEffectCloudDamagerType.name().replace("_", " "));
+                            potionType.name().replace("_", " "));
 
-                    // Add effect level, if upgradeable
-                    if (areaEffectCloudDamagerType.isUpgradeable()) {
-                        areaEffectCloudDamagerTypeName += areaEffectCloudDamager.getBasePotionData().isUpgraded() ? " II" : " I";
-                    }
+                    textComponentBuilder
+                            .append(Component.text(areaEffectCloudDamagerTypeName).color(NamedTextColor.AQUA));
+                }
 
-                    deathMessage.append(" by creating an ")
-                            .append("Area Effect Cloud with ").color(DARK_GRAY)
-                            .append(areaEffectCloudDamagerTypeName).color(AQUA);
+                // Add effect level, if upgradeable
+                if (potionType.isUpgradeable()) {
+                    textComponentBuilder.append(Component.text(areaEffectCloudDamager.getBasePotionData().isUpgraded() ? " II" : " I").color(NamedTextColor.AQUA));
                 }
 
             } else if (damager instanceof Tameable tameable && tameable.isTamed()) {
                 String damagerType = WordUtils.capitalizeFully(damager.getType().toString().replace("_", " "));
 
-                deathMessage.append(" by letting his " + damagerType + " loose");
+                textComponentBuilder
+                        .append(Component.text(" by letting his " + damagerType + " loose"));
 
             } else if (damager instanceof Creeper) {
-                deathMessage.append(" by letting a creeper blow up");
+                textComponentBuilder
+                        .append(Component.text(" by letting a creeper blow up"));
 
             } else {
-                deathMessage.append(" Other damager! Name: " + damager.getName() + "; " + damager.getType()).color(RED);
+                textComponentBuilder
+                        .append(Component.text(" by unknown means with an Entity (name: " + damager.getName() + "; " + damager.getType() + ")").color(NamedTextColor.RED));
 
             }
 
-        } else if (deadEntity.getLastDamageCause() instanceof EntityDamageByBlockEvent cause) {
+        } else if (lastDamageEvent instanceof EntityDamageByBlockEvent cause) {
             if (cause.getCause() == EntityDamageEvent.DamageCause.VOID) {
-                deathMessage
-                        .append(" by pushing it into")
-                        .append(" the VOID").color(BLACK).bold(true)
-                        .append("").reset().color(DARK_GRAY);
+                textComponentBuilder
+                        .append(Component.text(" by pushing it into"))
+                        .append(Component.text(" the VOID").color(NamedTextColor.BLACK).decorate(TextDecoration.BOLD));
+
             } else if (cause.getCause() == EntityDamageEvent.DamageCause.LAVA) {
-                deathMessage
-                        .append(" by pushing it into")
-                        .append(" Lava").color(RED).bold(true)
-                        .append("").reset().color(DARK_GRAY);
+                textComponentBuilder
+                        .append(Component.text(" by pushing it into"))
+                        .append(Component.text(" Lava").color(NamedTextColor.RED).decorate(TextDecoration.BOLD));
+
+
             } else if (cause.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR) {
-                deathMessage
-                        .append(" by pushing it onto")
-                        .append(" a very hot floor").color(RED).bold(true)
-                        .append("").reset().color(DARK_GRAY);
+                textComponentBuilder
+                        .append(Component.text(" by pushing it onto"))
+                        .append(Component.text(" a very hot floor").color(NamedTextColor.RED));
+
             } else {
-                deathMessage.append(" (How the heck did you do this? Event (block): " +
-                        "Cause:" + cause.getCause() + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
+
+                textComponentBuilder
+                        .append(Component.text(" by unknown means with a block (cause: " + cause.getCause() + "; damager: " + cause.getDamager() + ")").color(NamedTextColor.RED));
             }
 
-        } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.MAGIC) {
+        } else if (lastDamageEvent.getCause() == EntityDamageEvent.DamageCause.MAGIC) {
             // Might be an Arrow of Harming (I / II) or Arrow of Healing (I/II) for undead.
             // Either we assume that here, or we ignore it
             // (because we can't check: time of check vs time of arrow firing)
             // TODO: Can this be covered by our ProjectileLaunchListener?
 
-            deathMessage.append(" using ").color(DARK_GRAY)
-                    .append("Magic").color(AQUA)
-                    .append(" (").color(DARK_GRAY)
-                    .append("maybe Arrow of Harming?").italic(true)
-                    .append(")").reset().color(DARK_GRAY);
+            textComponentBuilder
+                    .append(Component.text(" using "))
+                    .append(Component.text("Magic").color(NamedTextColor.AQUA))
+                    .append(Component.text(" ("))
+                    .append(Component.text("maybe Arrow of Harming?").decorate(TextDecoration.ITALIC))
+                    .append(Component.text(")"));
 
-        } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE_TICK) {
+        } else if (lastDamageEvent.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK ||
+                lastDamageEvent.getCause() == EntityDamageEvent.DamageCause.FIRE) {
             // If cause == FIRE_TICK && getKiller == Player, this is caused by Fire* on Playerweapon
             // Fire_Tick = "Indirect Damage" (Burning)
-            deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
-
-        } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FIRE) {
             // Fire = "Direct Damage" (Lightning bolt)
-            deathMessage.append(" using ").color(DARK_GRAY).append("Fire").color(AQUA).append("").color(DARK_GRAY);
 
-        } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.FALL) {
-            deathMessage.append(" by letting him ").color(DARK_GRAY).append("fall to death").color(BLUE).append("").color(DARK_GRAY);
+            textComponentBuilder
+                    .append(Component.text(" using "))
+                    .append(Component.text("Fire").color(NamedTextColor.AQUA));
+
+        } else if (lastDamageEvent.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            textComponentBuilder
+                    .append(Component.text(" by letting him "))
+                    .append(Component.text("fall to death").color(NamedTextColor.BLUE));
+
 
         } else {
-            deathMessage.append(" (How the heck did you do this? Event (other): " + deadEntity.getLastDamageCause().getCause() + ")").color(DARK_RED);
+            textComponentBuilder
+                    .append(Component.text(" by unknown means (cause: " + lastDamageEvent.getCause() + "; damage type class: " + lastDamageEvent.getClass().getName() + ")").color(NamedTextColor.RED));
+
         }
 
 
         // Add "Killing Spree" info
         if (currentKillStat.getSpreeKillCount() > 1) {
-            deathMessage.append(" (killing spree x" + currentKillStat.getSpreeKillCount() + ")!!").color(RED);
+            textComponentBuilder
+                    .append(Component.text(" (killing spree x" + currentKillStat.getSpreeKillCount() + ")!!").color(NamedTextColor.RED));
         }
 
-        deathMessage
-                .append("").reset().color(DARK_GRAY)
-                .append("!");
+        textComponentBuilder
+                .append(Component.text("!").color(NamedTextColor.DARK_GRAY));
 
-        instance.getComponentLogger().info(BungeeComponentSerializer.legacy().deserialize(deathMessage.create()));
+        instance.getComponentLogger().info(textComponentBuilder.build());
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerMessageSetting playerMessageSetting = Configuration.getPlayerMessageSetting(player.getUniqueId());
             // Only send messages to players that want them
@@ -378,8 +406,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                 continue;
             }
 
-            player.spigot().sendMessage(deathMessage.create());
-
+            player.sendMessage(textComponentBuilder.build());
         }
 
     }
@@ -411,13 +438,22 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         return currentKillStat;
     }
 
-    private void getProjectileMessage(Player killerPlayer, ComponentBuilder deathMessage) {
-        ItemStack killerTrident = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
+    @Deprecated(forRemoval = true)
+    private void addLegacyProjectileMessage(Player killerPlayer, ComponentBuilder deathMessage) {
+        deathMessage.append(BungeeComponentSerializer.get().serialize(getProjectileMessage(killerPlayer)));
+    }
 
-        if (killerTrident != null) {
-            deathMessage.append(" with his ");
-            deathMessage.append(TextComponentHelper.itemToTextComponent(killerTrident));
+    private @NotNull TextComponent getProjectileMessage(Player killerPlayer) {
+        TextComponent.Builder projectileMessage = Component.text();
+        ItemStack killerProjectile = projectileLaunchHelper.getLastProjectileSource(killerPlayer.getUniqueId());
+
+        if (killerProjectile != null) {
+            projectileMessage
+                    .append(Component.text(" with his "))
+                    .append(TextComponentHelper.itemToComponent(killerProjectile));
         }
+
+        return projectileMessage.build();
     }
 
 
