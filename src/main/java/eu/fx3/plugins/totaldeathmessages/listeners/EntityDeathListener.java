@@ -108,10 +108,14 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
         instance.playerKillStats.put(killerPlayer.getUniqueId(), currentKillStat);
 
         // Check if entity has a custom name
-        boolean hasCustomName = deadEntity.getCustomName() != null;
+        String customName = "";
+        Component customNameComponent = deadEntity.customName();
+        if (customNameComponent != null) {
+            customName = PlainTextComponentSerializer.plainText().serialize(customNameComponent);
+        }
 
         // Get name for killed entity (or custom name if mob is named)
-        String killedEntityName = hasCustomName ? deadEntity.getCustomName().trim() : deadEntity.getName().trim();
+        String killedEntityName = !customName.isEmpty() ? customName : deadEntity.getName().trim();
         killedEntityName = WordUtils.capitalize(killedEntityName);
 
         /*
@@ -124,7 +128,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
 
 
         ComponentBuilder deathMessage = new ComponentBuilder().color(DARK_GRAY);
-        if (hasCustomName) {
+        if (!customName.isEmpty()) {
             // Get killed entity type (e.g. "Ender Dragon", "Bee")
             String killedEntityTypeName = deadEntity.getType().toString().replace("_", " ");
             killedEntityTypeName = WordUtils.capitalizeFully(killedEntityTypeName);
@@ -320,7 +324,7 @@ public class EntityDeathListener implements org.bukkit.event.Listener {
                         .append("").reset().color(DARK_GRAY);
             } else {
                 deathMessage.append(" (How the heck did you do this? Event (block): " +
-                                    "Cause:" + cause.getCause() + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
+                        "Cause:" + cause.getCause() + "; Damager:" + cause.getDamager() + ")").color(DARK_RED);
             }
 
         } else if (deadEntity.getLastDamageCause().getCause() == EntityDamageEvent.DamageCause.MAGIC) {
